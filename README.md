@@ -440,7 +440,7 @@ cd ~/Momentum/
 
 ``` sh
 # Get into the folder with the mission file
-cd ~/Momentum/lm-mit-momentum/demos
+cd ~/Momentum/lm-mit-momentum/tutorial/demos
 
 # Run mission file
 python3 demo_mission.py
