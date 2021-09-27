@@ -504,7 +504,7 @@ class GazeboMessageSubscriber:
 
         if connected: 
             # info from gz topic -l, gz topic -i arg goes here
-            self.gps_subscriber = self.manager.subscribe('/gazebo/default/iris_lmlidar/gps0/link/gps',
+            self.gps_subscriber = self.manager.subscribe('/gazebo/default/iris_lmlidar/link/gps0',
                                                          'gazebo.msgs.GPS',
                                                          self.gps_callback)
 
@@ -546,8 +546,8 @@ async def run():
             last_time = current_time
         if(current_time % 1  == 0 and last_time < current_time):
             print(current_time)
-            last_time = current_time
-
+            last_time = current_time0
+        await asyncio.sleep(0.01)
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()
