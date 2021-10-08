@@ -100,6 +100,10 @@ Summary of [PX4 and Gazebo setup guide for ubuntu](https://dev.px4.io/master/en/
 # Return to home project directory
 cd ~/Momentum
 
+# Install GIT. Git is a free and open source version control system designed for storing/collaborating on files and projects.
+# Many open-source software packages can be obtained via GIT. Project Momentum files are also stored using GIT.
+sudo apt install git
+
 # Make home directory for PX4
 mkdir PX4
 cd PX4
