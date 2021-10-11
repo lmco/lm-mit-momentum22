@@ -1,8 +1,7 @@
 # Getting Started <!-- omit in toc -->
 
-If you are viewing this file offline, the most up to date version of these instructions is located in the [project GitHub](https://github.com/katabeta/lm-mit-momentum).
+If you are viewing this file offline, the most up to date version of these instructions is located in the [project GitHub](https://github.com/lmco/lm-mit-momentum22).
 
-***ATTENTION STUDENTS:***  **THERE WAS AN UPDATE TO THE LIDAR REGISTRATION ALGORITHM**. If you are using the default templates or are relying on the LIDAR registration algorithm in them, the previous versions of these files contained a bug in the coordinate transforms. This bug has been fixed and you must update your files. Thanks to the student who pointed out the bug during office hours on 25 JAN.
 
 **NOTES:**
 
@@ -13,12 +12,12 @@ If you are viewing this file offline, the most up to date version of these instr
 
 ## Table of Contents <!-- omit in toc -->
 <!-- TOC and section numbers automatically generated, do not manually edit -->
-- [1. Install Ubuntu 18.04 LTS or 20.04 LTS](#1-install-ubuntu-1804-lts-or-2004-lts)
+- [1. Install Ubuntu 20.04 LTS](#1-install-ubuntu-2004-lts)
   - [1.1. Basic steps to install Ubuntu outside of a Virtual Machine](#11-basic-steps-to-install-ubuntu-outside-of-a-virtual-machine)
   - [1.2. Basic steps to install Ubuntu inside of a Virtual Machine](#12-basic-steps-to-install-ubuntu-inside-of-a-virtual-machine)
 - [2. Install VS Code IDE](#2-install-vs-code-ide)
 - [3. Get Gazebo and PX4](#3-get-gazebo-and-px4)
-  - [3.1. Clone PX4 and install Gazebo](#31-clone-px4-and-install-gazebo)
+  - [3.1. Clone PX4 and install Gazebo9](#31-clone-px4-and-install-gazebo9)
   - [3.2. Build PX4](#32-build-px4)
 - [4. OPTIONAL Install QGroundControl](#4-optional-install-qgroundcontrol)
   - [4.1. Fix problem where PX4 running Gazebo can't connect to QGroundControl](#41-fix-problem-where-px4-running-gazebo-cant-connect-to-qgroundcontrol)
@@ -41,9 +40,9 @@ If you are viewing this file offline, the most up to date version of these instr
   - [13.2. Run a MAVSDK example (PX4 and Gazebo have to be running)](#132-run-a-mavsdk-example-px4-and-gazebo-have-to-be-running)
 <!-- TOC and section numbers automatically generated, do not manually edit -->
 
-## 1. Install Ubuntu 18.04 LTS or 20.04 LTS
+## 1. Install Ubuntu 20.04 LTS
 
-The software required for this project runs and is supported only in Ubuntu 18.04 or 20.04. As such, it is necessary to install this operating system to complete the project.
+The software required for this project runs and is supported only in Ubuntu 18.04 or 20.04. As such, it is necessary to install the Ubuntu 20.04 operating system to complete the project.
 
 ### 1.1. Basic steps to install Ubuntu outside of a Virtual Machine
 
@@ -55,10 +54,10 @@ The software required for this project runs and is supported only in Ubuntu 18.0
     - Make live USB in [Mac](https://ubuntu.com/tutorials/create-a-usb-stick-on-macos#1-overview)
 4. [Boot from created USB](https://ubuntu.com/tutorials/install-ubuntu-desktop#4-boot-from-usb-flash-drive)
    - If your computer doesn't automatically boot from from the USB and `F12` does not work to invoke the boot menu, pay attention to the bootscreen for the key specific for your computer.
-5. Choose a location to make a persistent image
-    - [Install to dual boot with current OS](https://ubuntu.com/tutorials/install-ubuntu-desktop#6-allocate-drive-space) (**recommended**)
-    - [Install with persistent storage onto a USB drive](https://www.techrepublic.com/article/how-to-create-a-live-usb-drive-with-persistent-storage-in-ubuntu/) (**advanced**)
-    - [Install instead of current OS](https://ubuntu.com/tutorials/install-ubuntu-desktop#6-allocate-drive-space) (**not recommended**)
+5. Choose how to Install Ubuntu:
+    - [Install to dual boot with current OS](https://ubuntu.com/tutorials/install-ubuntu-desktop#6-allocate-drive-space) (**recommended**). This will create an Ubuntu partition on your computer. Select "Install Ubuntu" when prompted after booting from USB, then [follow these steps](https://ubuntu.com/tutorials/install-ubuntu-desktop#6-allocate-drive-space)
+    - [Install with persistent storage onto a USB drive](https://www.howtogeek.com/howto/14912/create-a-persistent-bootable-ubuntu-usb-flash-drive/) (**advanced**). This does not require any changes to your computer; instead Ubuntu will exist on its own USB device with its own memory. This will require an additional USB device to install the persistent image onto. Select "Try Ubuntu" when prompted after booting from USB, then [follow these steps](https://www.howtogeek.com/howto/14912/create-a-persistent-bootable-ubuntu-usb-flash-drive/)
+    - [Install instead of current OS](https://ubuntu.com/tutorials/install-ubuntu-desktop#6-allocate-drive-space) (**not recommended**). This will replace your computer's OS with Ubuntu. Select "Install Ubuntu" when prompted after booting from USB, then [follow these steps](https://ubuntu.com/tutorials/install-ubuntu-desktop#6-allocate-drive-space)
 
 ### 1.2. Basic steps to install Ubuntu inside of a Virtual Machine
 
@@ -92,13 +91,17 @@ PX4 is industry-standard autopilot software for hobbyist drone applications. It 
 
 Gazebo is similarly positioned in the robotics simulation world and is heavily used with ROS (Robot Operating System, not used in this project). Gazebo enables real-time physics simulation, sensor and terrain integration, and provides visual feedback for the user.
 
-### 3.1. Clone PX4 and install Gazebo
+### 3.1. Clone PX4 and install Gazebo9
 
 Summary of [PX4 and Gazebo setup guide for ubuntu](https://dev.px4.io/master/en/setup/dev_env_linux_ubuntu.html):
 
 ``` sh
 # Return to home project directory
 cd ~/Momentum
+
+# Install GIT. Git is a free and open source version control system designed for storing/collaborating on files and projects.
+# Many open-source software packages can be obtained via GIT. Project Momentum files are also stored using GIT.
+sudo apt install git
 
 # Make home directory for PX4
 mkdir PX4
@@ -234,7 +237,7 @@ sudo apt-get install 2to3
 sudo find ./ -type f -exec sed -i 's/asyncio.async/asyncio.ensure_future/g' {} \;
 
 # Update proto definitions from the root of the py3gazebo project
-export GAZEBO_HOME=/usr/include/gazebo-11
+export GAZEBO_HOME=/usr/include/gazebo-9
 protoc --proto_path=$GAZEBO_HOME/gazebo/msgs --python_out=pygazebo/msg $GAZEBO_HOME/gazebo/msgs/*proto
 ```
 
