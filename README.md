@@ -121,7 +121,7 @@ bash ./Tools/setup/ubuntu.sh
 #
 ```
 
-Finally, follow [these instructions](https://gazebosim.org/tutorials?tut=install_ubuntu) to update Gazebo to the first-party sources.  Use the "Alternative Installation: Step by Step" instructions.  *(Note that this step may be removed if ubuntu.sh is updated to install a compatible version of Gazebo.)*
+Finally, follow [these instructions](http://gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0) to update Gazebo to the first-party sources.  Use the "Alternative Installation: Step by Step" instructions.  *(Note that this step may be removed if ubuntu.sh is updated to install a compatible version of Gazebo.)*
 
 ### 3.2. Build PX4
 
