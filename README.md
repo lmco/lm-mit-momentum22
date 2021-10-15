@@ -121,7 +121,25 @@ bash ./Tools/setup/ubuntu.sh
 #
 ```
 
-Finally, follow [these instructions](http://gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0) to update Gazebo to the first-party sources.  Use the "Alternative Installation: Step by Step" instructions.  *(Note that this step may be removed if ubuntu.sh is updated to install a compatible version of Gazebo.)*
+Next, check which version of Gazebo is installed, if any:
+
+``` sh
+# check for gazebo version
+gazebo --version
+
+```
+
+If there Gazebo version 9 is installed, then move on to section 3.2. If another version is installed, then that version of Gazebo, and its associated files, need to be removed from the computer prior to installing the correct version (NOTE: if Gazebo is not installed at all, then skip this step):
+
+``` sh
+# Remove current version of Gazebo
+sudo apt-get remove ros-ROS_DISTRO-gazebo*
+sudo apt-get remove libgazebo*
+sudo apt-get remove gazebo*
+
+```
+
+Finally, follow [these instructions](http://gazebosim.org/tutorials?cat=install&tut=install_ubuntu&ver=9.0) to install Gazebo Version 9 from the first-party sources.  Use the "Alternative Installation: Step by Step" instructions. 
 
 ### 3.2. Build PX4
 
