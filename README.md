@@ -265,14 +265,14 @@ The Python library is not yet installed. LM is providing an updated `setup.py` s
 
 Based on this [forum post](https://discuss.px4.io/t/create-custom-model-for-sitl/6700/2).
 
-1. Download the LM provided assets from [this repository](https://github.com/katabeta/lm-mit-momentum) and place parallel to your PX4 top folder
+1. Download the LM provided assets from [this repository](https://github.com/lmco/lm-mit-momentum22) and place parallel to your PX4 top folder
 
     ``` sh
     # Get into the project directory
     cd ~/Momentum
 
     # Clone project
-    git clone https://github.com/katabeta/lm-mit-momentum.git
+    git clone https://github.com/lmco/lm-mit-momentum22.git
 
     # Check directory tree
     sudo apt-get install tree
