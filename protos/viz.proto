@@ -1,0 +1,63 @@
+syntax = "proto3";
+
+//
+// Service to connect the Momentum 22 Python Visualization to student code
+service Momentum22Viz {
+  //
+  // Client: Student code
+  // Server: Visualization
+  // Sets the landing status in the visualization based on observations in student code
+  rpc SetLandingStatus(LandingNotification) returns (ReqAck) {}  
+  //
+  // Client: Student code
+  // Server: Visualization
+  // Sets the take off status in the visualization based on observations in student code
+  rpc SetTakeoffLandingStatus(LandingNotification) returns (ReqAck) {}  
+  //
+  // Client: Visualization
+  // Server: Student code
+  // Sets the landing status in the visualization based on observations in student code
+  rpc GetDroneLocation(ReqAck) returns (Location) {}
+}
+
+//
+// Location of the student drone in lat/lon linked to time
+message Location {
+  // ID of this message (this will returned in the ReqAck message)
+  uint32 msgId = 1;
+  // Drone latitute in degreees
+  double latitude = 2;
+  // Drone longitude in degreees
+  double longitude = 3;
+  // Time when this location was observed in seconds
+  uint64 px4Time = 4;
+}
+
+//
+// Notification to the visualization utility that the drone has landed linked to time
+message LandingNotification{
+  // ID of this message (this will returned in the ReqAck message)
+  uint32 msgId = 1;
+  // Whether the drone is landed
+  bool isLanded = 2;
+  // Time when the landing was observed in seconds
+  uint64 px4Time = 3;
+}
+
+//
+// Notification ot the visualization utility that the drone has taken off linked to time
+message TakeoffNotification{
+  // ID of this message (this will returned in the ReqAck message)
+  uint32 msgId = 1;
+  // Whether the drone is taken off
+  bool isTakenOff = 2;
+  // Tiem when the take off was observed
+  uint64 px4Time = 3;
+}
+
+//
+// Request/Acknowledgement of messages
+message ReqAck {
+  // ID of the message this is an ackowledgement to or request for
+  uint64 msgId = 1;
+}
