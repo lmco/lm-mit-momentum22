@@ -1,4 +1,5 @@
 from visualizationSharedDataStore import VisualizationSharedDataStore
+from visualizationSharedDataStore import Mode
 
 from bokeh.models import GeoJSONDataSource, ColumnDataSource
 import os
@@ -27,8 +28,9 @@ class Data(VisualizationSharedDataStore):
         self.map_data_dict = None
 
         # Create bounding box for the scope of mapping (contiguous USA)
-        self.contiguous_usa_bbox = (-130.25390625, 22.55314748, -65.63232422, 49.55372551)
-        if(self.Viz.mode == self.Viz.mode.MAP_MAKER):
+        self.contiguous_usa_bbox = (-130.25390625,
+                                    22.55314748, -65.63232422, 49.55372551)
+        if(self.Viz.mode == Mode.MAP_MAKER):
             self.bbox = self.contiguous_usa_bbox
             self.map_data_dict = {
                 "map_name": "sample_name",
@@ -38,9 +40,11 @@ class Data(VisualizationSharedDataStore):
                            'maxx': self.bbox[2],
                            'maxy': self.bbox[3]},
                 "data_fs": {'xs': [],
-                            'ys': [],},
+                            'ys': [], },
                 "data_snr": {'x': [],
                              'y': []},
+                "wind": {'spd_kts': 0,
+                         'dir_deg': 0},
             }
         elif(self.Viz.map_name is not None):
             self.map_data_dict = self.load_map_record(self.Viz.map_name)
@@ -61,14 +65,26 @@ class Data(VisualizationSharedDataStore):
 
         self.waterbodies_filepath = [os.path.join(os.path.basename(
             os.path.dirname(inspect.getfile(lambda: None))), 'static', 'waterbodies.svg')]
-
-        # Table data sources
-        if(self.Viz.mode == self.Viz.mode.MAP_MAKER):
-            self.bounds_table_source = ColumnDataSource({
+        
+        self.wind_table_source = ColumnDataSource({
+                'spd_kts': [self.Viz.data.map_data_dict['wind']['spd_kts']],
+                'dir_deg': [self.Viz.data.map_data_dict['wind']['dir_deg']]})
+        self.bounds_table_source = ColumnDataSource({
                 'minx': [self.Viz.data.map_data_dict['bounds']['minx']],
                 'miny': [self.Viz.data.map_data_dict['bounds']['miny']],
                 'maxx': [self.Viz.data.map_data_dict['bounds']['maxx']],
                 'maxy': [self.Viz.data.map_data_dict['bounds']['maxy']]})
+        self.stats_table_source = ColumnDataSource({
+                'elapsed_dur': [0],
+                'remaining_dur': [0],
+                'mission_stat': [0],
+                'lat': [0],
+                'lng': [0],
+                'status': [0],
+                'points': [0]})
+
+        # Table data sources
+        if(self.Viz.mode == Mode.MAP_MAKER):
             self.survivors_table_source = ColumnDataSource({
                 'x': [self.Viz.data.map_data_dict['data_snr']['x']],
                 'y': [self.Viz.data.map_data_dict['data_snr']['y']]})
@@ -76,21 +92,16 @@ class Data(VisualizationSharedDataStore):
                 'xs': [self.Viz.data.map_data_dict['data_fs']['xs']],
                 'ys': [self.Viz.data.map_data_dict['data_fs']['ys']]})
         else:
-            self.bounds_table_source = ColumnDataSource({
-                'minx': self.Viz.data.map_data_dict['bounds']['minx'],
-                'miny': self.Viz.data.map_data_dict['bounds']['miny'],
-                'maxx': self.Viz.data.map_data_dict['bounds']['maxx'],
-                'maxy': self.Viz.data.map_data_dict['bounds']['maxy']})
             self.survivors_table_source = ColumnDataSource({
                 'x': self.Viz.data.map_data_dict['data_snr']['x'],
                 'y': self.Viz.data.map_data_dict['data_snr']['y'],
                 'color': ['orange']*len(self.Viz.data.map_data_dict['data_snr']['y']),
-                'alpha': [0.0]*len(self.Viz.data.map_data_dict['data_snr']['y'])})
+                'alpha': [0.0]*len(self.Viz.data.map_data_dict['data_snr']['y'])} if self.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else {})
             self.fires_table_source = ColumnDataSource({
                 'xs': self.Viz.data.map_data_dict['data_fs']['xs'],
                 'ys': self.Viz.data.map_data_dict['data_fs']['ys'],
-                'fill_color': ['red']*len(self.Viz.data.map_data_dict['data_fs']),
-                'alpha': [0]*len(self.Viz.data.map_data_dict['data_fs'])})
+                'fill_color': ['red']*len(self.Viz.data.map_data_dict['data_fs']['ys']),
+                'alpha': [0]*len(self.Viz.data.map_data_dict['data_fs']['ys'])} if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION else {})
 
     def save_map_record(self) -> None:
         try:

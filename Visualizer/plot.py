@@ -1,4 +1,6 @@
 from visualizationSharedDataStore import VisualizationSharedDataStore
+from visualizationSharedDataStore import Mode
+from data import MapType
 
 from bokeh.plotting import figure
 from bokeh.models import PointDrawTool, PolyDrawTool
@@ -20,7 +22,7 @@ class Plot(VisualizationSharedDataStore):
                              y_range=(
                                  self.Viz.data.bbox[1], self.Viz.data.bbox[3]),
                              toolbar_location='below',
-                             tools="pan, wheel_zoom, box_zoom, reset" if self.Viz.mode == self.Viz.mode.MAP_MAKER else "reset",
+                             tools="pan, wheel_zoom, box_zoom, reset" if self.Viz.mode == Mode.MAP_MAKER else "reset",
                              sizing_mode="scale_both")
         self.figure.xgrid.grid_line_color = None
         self.figure.ygrid.grid_line_color = None
@@ -32,12 +34,7 @@ class Plot(VisualizationSharedDataStore):
                               self.Viz.data.contiguous_usa_bbox[0],
                               h=self.Viz.data.contiguous_usa_bbox[3] - self.Viz.data.contiguous_usa_bbox[1])
 
-        # self.survivor_renderer = self.figure.scatter(
-        #     x='x', y='y', color='orange', alpha=0, source=self.Viz.data.survivors_table_source, size=5)
-        # self.fires_renderer = self.figure.patches(
-        #     xs='xs', ys='ys', fill_color='red', alpha=0, source=self.Viz.data.fires_table_source, line_width=0)
-
-        if(self.Viz.mode == self.Viz.mode.MAP_MAKER):
+        if(self.Viz.mode == Mode.MAP_MAKER):
             self.survivor_renderer = self.figure.scatter(
                 x='x', y='y', color='orange', alpha=0.4, source=self.Viz.data.survivors_table_source, size=5)
             self.fires_renderer = self.figure.patches(
@@ -53,7 +50,9 @@ class Plot(VisualizationSharedDataStore):
             self.figure.add_tools(self.fire_tool)
             self.figure.toolbar.active_drag = self.fire_tool
         else:
-            self.survivor_renderer = self.figure.scatter(
-                x='x', y='y', color='color', alpha='alpha', source=self.Viz.data.survivors_table_source, size=5)
-            self.fires_renderer = self.figure.patches(
-                xs='xs', ys='ys', fill_color='fill_color', alpha='alpha', source=self.Viz.data.fires_table_source, line_width=0)
+            if(self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE):
+                self.survivor_renderer = self.figure.scatter(
+                    x='x', y='y', color='color', alpha='alpha', source=self.Viz.data.survivors_table_source, size=5)
+            elif(self.Viz.data.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION):
+                self.fires_renderer = self.figure.patches(
+                    xs='xs', ys='ys', fill_color='fill_color', alpha='alpha', source=self.Viz.data.fires_table_source, line_width=0)

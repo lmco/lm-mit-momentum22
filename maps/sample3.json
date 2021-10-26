@@ -59,5 +59,9 @@
     },
     "generated_on": "18/10/2021_22:48:43",
     "map_name": "sample3",
-    "map_type": 0
+    "map_type": 0,
+    "wind": {
+        "spd_kts": 0,
+        "dir_deg": 0
+    }
 }
