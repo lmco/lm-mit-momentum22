@@ -6,7 +6,7 @@ import viz_pb2 as viz_connect
 import viz_pb2_grpc as viz_connect_grpc
 
 
-channel = grpc.insecure_channel('localhost:50051')
+channel = grpc.insecure_channel('localhost:51052')
 stub = viz_connect_grpc.Momentum22VizStub(channel)
 
 ln = viz_connect.LandingNotification(msgId=1, isLanded=True, px4Time=123456)

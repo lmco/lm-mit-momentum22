@@ -12,7 +12,7 @@ service Momentum22Viz {
   // Client: Student code
   // Server: Visualization
   // Sets the take off status in the visualization based on observations in student code
-  rpc SetTakeoffStatus(LandingNotification) returns (ReqAck) {}  
+  rpc SetTakeoffStatus(TakeoffNotification) returns (ReqAck) {}  
   //
   // Client: Visualization
   // Server: Student code

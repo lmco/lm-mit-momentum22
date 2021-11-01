@@ -23,7 +23,7 @@ class Momentum22VizStub(object):
                 )
         self.SetTakeoffStatus = channel.unary_unary(
                 '/Momentum22Viz/SetTakeoffStatus',
-                request_serializer=viz__pb2.LandingNotification.SerializeToString,
+                request_serializer=viz__pb2.TakeoffNotification.SerializeToString,
                 response_deserializer=viz__pb2.ReqAck.FromString,
                 )
         self.GetDroneLocation = channel.unary_unary(
@@ -78,7 +78,7 @@ def add_Momentum22VizServicer_to_server(servicer, server):
             ),
             'SetTakeoffStatus': grpc.unary_unary_rpc_method_handler(
                     servicer.SetTakeoffStatus,
-                    request_deserializer=viz__pb2.LandingNotification.FromString,
+                    request_deserializer=viz__pb2.TakeoffNotification.FromString,
                     response_serializer=viz__pb2.ReqAck.SerializeToString,
             ),
             'GetDroneLocation': grpc.unary_unary_rpc_method_handler(
@@ -127,7 +127,7 @@ class Momentum22Viz(object):
             timeout=None,
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/Momentum22Viz/SetTakeoffStatus',
-            viz__pb2.LandingNotification.SerializeToString,
+            viz__pb2.TakeoffNotification.SerializeToString,
             viz__pb2.ReqAck.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

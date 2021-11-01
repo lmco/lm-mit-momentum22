@@ -32,7 +32,7 @@ def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     viz_connect_grpc.add_Momentum22VizServicer_to_server(
         Momentum22VizServicer(), server)
-    server.add_insecure_port('[::]:50051')
+    server.add_insecure_port('[::]:51052')
     server.start()
     server.wait_for_termination()
     
