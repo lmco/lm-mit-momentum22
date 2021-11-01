@@ -17,7 +17,7 @@ class Momentum22VizServicer(viz_connect_grpc.Momentum22VizServicer):
         print(request)
         return ack
     
-    def SetTakeoffLandingStatus(self, request, context):
+    def SetTakeoffStatus(self, request, context):
         # tn = viz_connect.TakeoffNotification(msgId = 1, isTakenOff=True, px4Time = 0)
         ack = viz_connect.ReqAck(msgId = request.msgId)
         print(request)

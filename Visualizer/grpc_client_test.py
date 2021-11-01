@@ -15,7 +15,7 @@ req = viz_connect.ReqAck(msgId=1)
 
 for i in range (10):
     ack1 = stub.SetLandingStatus(ln)
-    ack2 = stub.SetTakeoffLandingStatus(tn)
+    ack2 = stub.SetTakeoffStatus(tn)
     loc = stub.GetDroneLocation(req)
     print(ack1)
     print(ack2)

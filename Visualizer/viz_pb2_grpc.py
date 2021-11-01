@@ -21,8 +21,8 @@ class Momentum22VizStub(object):
                 request_serializer=viz__pb2.LandingNotification.SerializeToString,
                 response_deserializer=viz__pb2.ReqAck.FromString,
                 )
-        self.SetTakeoffLandingStatus = channel.unary_unary(
-                '/Momentum22Viz/SetTakeoffLandingStatus',
+        self.SetTakeoffStatus = channel.unary_unary(
+                '/Momentum22Viz/SetTakeoffStatus',
                 request_serializer=viz__pb2.LandingNotification.SerializeToString,
                 response_deserializer=viz__pb2.ReqAck.FromString,
                 )
@@ -48,7 +48,7 @@ class Momentum22VizServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def SetTakeoffLandingStatus(self, request, context):
+    def SetTakeoffStatus(self, request, context):
         """
         Client: Student code
         Server: Visualization
@@ -76,8 +76,8 @@ def add_Momentum22VizServicer_to_server(servicer, server):
                     request_deserializer=viz__pb2.LandingNotification.FromString,
                     response_serializer=viz__pb2.ReqAck.SerializeToString,
             ),
-            'SetTakeoffLandingStatus': grpc.unary_unary_rpc_method_handler(
-                    servicer.SetTakeoffLandingStatus,
+            'SetTakeoffStatus': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetTakeoffStatus,
                     request_deserializer=viz__pb2.LandingNotification.FromString,
                     response_serializer=viz__pb2.ReqAck.SerializeToString,
             ),
@@ -116,7 +116,7 @@ class Momentum22Viz(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def SetTakeoffLandingStatus(request,
+    def SetTakeoffStatus(request,
             target,
             options=(),
             channel_credentials=None,
@@ -126,7 +126,7 @@ class Momentum22Viz(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Momentum22Viz/SetTakeoffLandingStatus',
+        return grpc.experimental.unary_unary(request, target, '/Momentum22Viz/SetTakeoffStatus',
             viz__pb2.LandingNotification.SerializeToString,
             viz__pb2.ReqAck.FromString,
             options, channel_credentials,
