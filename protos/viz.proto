@@ -29,7 +29,7 @@ message Location {
   double latitude = 2;
   // Drone longitude in degreees
   double longitude = 3;
-  // Time when this location was observed in seconds
+  // Time when this location was observed in milliseconds
   uint64 px4Time = 4;
 }
 
@@ -40,7 +40,7 @@ message LandingNotification{
   uint32 msgId = 1;
   // Whether the drone is landed
   bool isLanded = 2;
-  // Time when the landing was observed in seconds
+  // Time when the landing was observed in milliseconds
   uint64 px4Time = 3;
 }
 
@@ -51,7 +51,7 @@ message TakeoffNotification{
   uint32 msgId = 1;
   // Whether the drone is taken off
   bool isTakenOff = 2;
-  // Tiem when the take off was observed
+  // Time when the landing was observed in milliseconds
   uint64 px4Time = 3;
 }
 
