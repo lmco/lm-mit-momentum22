@@ -26,10 +26,10 @@ class Momentum22VizStub(object):
                 request_serializer=viz__pb2.TakeoffNotification.SerializeToString,
                 response_deserializer=viz__pb2.ReqAck.FromString,
                 )
-        self.GetDroneLocation = channel.unary_unary(
-                '/Momentum22Viz/GetDroneLocation',
-                request_serializer=viz__pb2.ReqAck.SerializeToString,
-                response_deserializer=viz__pb2.Location.FromString,
+        self.SetDroneLocation = channel.unary_unary(
+                '/Momentum22Viz/SetDroneLocation',
+                request_serializer=viz__pb2.Location.SerializeToString,
+                response_deserializer=viz__pb2.ReqAck.FromString,
                 )
 
 
@@ -58,11 +58,11 @@ class Momentum22VizServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetDroneLocation(self, request, context):
+    def SetDroneLocation(self, request, context):
         """
-        Client: Visualization
-        Server: Student code
-        Sets the landing status in the visualization based on observations in student code
+        Client: Student Code
+        Server: Visualization
+        Sets the drone's position in the visualization based on observations in student code
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -81,10 +81,10 @@ def add_Momentum22VizServicer_to_server(servicer, server):
                     request_deserializer=viz__pb2.TakeoffNotification.FromString,
                     response_serializer=viz__pb2.ReqAck.SerializeToString,
             ),
-            'GetDroneLocation': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetDroneLocation,
-                    request_deserializer=viz__pb2.ReqAck.FromString,
-                    response_serializer=viz__pb2.Location.SerializeToString,
+            'SetDroneLocation': grpc.unary_unary_rpc_method_handler(
+                    servicer.SetDroneLocation,
+                    request_deserializer=viz__pb2.Location.FromString,
+                    response_serializer=viz__pb2.ReqAck.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -133,7 +133,7 @@ class Momentum22Viz(object):
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetDroneLocation(request,
+    def SetDroneLocation(request,
             target,
             options=(),
             channel_credentials=None,
@@ -143,8 +143,8 @@ class Momentum22Viz(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Momentum22Viz/GetDroneLocation',
-            viz__pb2.ReqAck.SerializeToString,
-            viz__pb2.Location.FromString,
+        return grpc.experimental.unary_unary(request, target, '/Momentum22Viz/SetDroneLocation',
+            viz__pb2.Location.SerializeToString,
+            viz__pb2.ReqAck.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

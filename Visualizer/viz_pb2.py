@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\tviz.proto\"O\n\x08Location\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08latitude\x18\x02 \x01(\x01\x12\x11\n\tlongitude\x18\x03 \x01(\x01\x12\x0f\n\x07px4Time\x18\x04 \x01(\x04\"G\n\x13LandingNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08isLanded\x18\x02 \x01(\x08\x12\x0f\n\x07px4Time\x18\x03 \x01(\x04\"I\n\x13TakeoffNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x12\n\nisTakenOff\x18\x02 \x01(\x08\x12\x0f\n\x07px4Time\x18\x03 \x01(\x04\"\x17\n\x06ReqAck\x12\r\n\x05msgId\x18\x01 \x01(\x04\x32\xa3\x01\n\rMomentum22Viz\x12\x33\n\x10SetLandingStatus\x12\x14.LandingNotification\x1a\x07.ReqAck\"\x00\x12\x33\n\x10SetTakeoffStatus\x12\x14.TakeoffNotification\x1a\x07.ReqAck\"\x00\x12(\n\x10GetDroneLocation\x12\x07.ReqAck\x1a\t.Location\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\tviz.proto\"O\n\x08Location\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08latitude\x18\x02 \x01(\x01\x12\x11\n\tlongitude\x18\x03 \x01(\x01\x12\x0f\n\x07px4Time\x18\x04 \x01(\x04\"G\n\x13LandingNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08isLanded\x18\x02 \x01(\x08\x12\x0f\n\x07px4Time\x18\x03 \x01(\x04\"I\n\x13TakeoffNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x12\n\nisTakenOff\x18\x02 \x01(\x08\x12\x0f\n\x07px4Time\x18\x03 \x01(\x04\"\x17\n\x06ReqAck\x12\r\n\x05msgId\x18\x01 \x01(\x04\x32\xa3\x01\n\rMomentum22Viz\x12\x33\n\x10SetLandingStatus\x12\x14.LandingNotification\x1a\x07.ReqAck\"\x00\x12\x33\n\x10SetTakeoffStatus\x12\x14.TakeoffNotification\x1a\x07.ReqAck\"\x00\x12(\n\x10SetDroneLocation\x12\t.Location\x1a\x07.ReqAck\"\x00\x62\x06proto3'
 )
 
 
@@ -268,12 +268,12 @@ _MOMENTUM22VIZ = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='GetDroneLocation',
-    full_name='Momentum22Viz.GetDroneLocation',
+    name='SetDroneLocation',
+    full_name='Momentum22Viz.SetDroneLocation',
     index=2,
     containing_service=None,
-    input_type=_REQACK,
-    output_type=_LOCATION,
+    input_type=_LOCATION,
+    output_type=_REQACK,
     serialized_options=None,
     create_key=_descriptor._internal_create_key,
   ),

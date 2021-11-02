@@ -14,10 +14,10 @@ service Momentum22Viz {
   // Sets the take off status in the visualization based on observations in student code
   rpc SetTakeoffStatus(TakeoffNotification) returns (ReqAck) {}  
   //
-  // Client: Visualization
-  // Server: Student code
-  // Sets the landing status in the visualization based on observations in student code
-  rpc GetDroneLocation(ReqAck) returns (Location) {}
+  // Client: Student Code
+  // Server: Visualization
+  // Sets the drone's position in the visualization based on observations in student code
+  rpc SetDroneLocation(Location) returns (ReqAck) {}
 }
 
 //

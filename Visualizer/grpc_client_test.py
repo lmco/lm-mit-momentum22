@@ -11,17 +11,17 @@ stub = viz_connect_grpc.Momentum22VizStub(channel)
 
 ln = viz_connect.LandingNotification(msgId=1, isLanded=True, px4Time=123456)
 tn = viz_connect.TakeoffNotification(msgId=1, isTakenOff=True, px4Time=123456)
-req = viz_connect.ReqAck(msgId=1)
+loc = viz_connect.Location(msgId=1, latitude = 41.123456, longitude = 82.123456, px4Time = 123456)
 
 for i in range (10):
     ack1 = stub.SetLandingStatus(ln)
     ack2 = stub.SetTakeoffStatus(tn)
-    loc = stub.GetDroneLocation(req)
+    ack3 = stub.SetDroneLocation(loc)
     print(ack1)
     print(ack2)
-    print(loc)
+    print(ack3)
     ln.msgId = ln.msgId + 1
     tn.msgId = tn.msgId + 1
-    req.msgId = req.msgId + 1
+    loc.msgId = loc.msgId + 1
     
     time.sleep(1)

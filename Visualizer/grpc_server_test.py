@@ -23,10 +23,11 @@ class Momentum22VizServicer(viz_connect_grpc.Momentum22VizServicer):
         print(request)
         return ack
     
-    def GetDroneLocation(self, request, context):
-        loc = viz_connect.Location(msgId=request.msgId, latitude = 41.123456, longitude = 82.123456, px4Time = 123456)
+    def SetDroneLocation(self, request, context):
+        # loc = viz_connect.Location(msgId=request.msgId, latitude = 41.123456, longitude = 82.123456, px4Time = 123456)
+        ack = viz_connect.ReqAck(msgId = request.msgId)
         print(request)
-        return loc
+        return ack
     
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
