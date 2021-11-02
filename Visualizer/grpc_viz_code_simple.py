@@ -10,6 +10,9 @@ import time
 import multiprocessing
 
 def vizBlock():
+    """
+    Simulate doing visualization things
+    """
     print("sleep commence")
     time.sleep(60)
     print("sleep done")
@@ -35,6 +38,9 @@ class Momentum22VizServicer(viz_connect_grpc.Momentum22VizServicer):
         return ack
     
 def serve():
+    """
+    Start the server and keep it alive until done
+    """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     viz_connect_grpc.add_Momentum22VizServicer_to_server(
         Momentum22VizServicer(), server)
@@ -44,8 +50,11 @@ def serve():
     
 if __name__ == '__main__':
     logging.basicConfig()
+    
+    # Throw the server into another process so that we can do viz tasks without interruptions
     p = multiprocessing.Process(target=serve)
     p.start()
     
+    # Simulate doing viz tasks
     vizBlock()
     

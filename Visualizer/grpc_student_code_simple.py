@@ -15,11 +15,17 @@ channel = grpc.insecure_channel('localhost:51052')
 stub = viz_connect_grpc.Momentum22VizStub(channel)
 
 def mavsdkBlock():
+    """
+    Simulate doing mavsdk things
+    """
     print("sleep commence")
     time.sleep(1)
     print("sleep done")
 
 def worker():
+    """
+    Process the queue of incomming grpc messages to send out
+    """
     while True:
         item = qLanding.get()
         print(f'Working on {item}')
@@ -43,10 +49,12 @@ def worker():
         
         qLocation.task_done()
         
+# Start the queue thread
 threading.Thread(target=worker, daemon=True).start()
 
 start_time = time.time()
 for item in range(10):
+    # Queue up things to send
     curr_time = int((time.time()-start_time)*1000) #! NOTE: milliseconds
     ln = viz_connect.LandingNotification(msgId=item, isLanded=True, px4Time=(curr_time))
     tn = viz_connect.TakeoffNotification(msgId=item, isTakenOff=True, px4Time=(curr_time))
@@ -54,10 +62,13 @@ for item in range(10):
     qLanding.put(ln)
     qTakeoff.put(tn)
     qLocation.put(loc)
+    
+    # Simulate doing mavsdk tasks
     mavsdkBlock()
+    
 print('All task requests sent\n', end='')
 
-# block until all tasks are done
+# Block until all tasks are done
 qLanding.join()
 qTakeoff.join()
 qLocation.join()
