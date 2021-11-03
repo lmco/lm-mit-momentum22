@@ -12,6 +12,9 @@ from enum import IntEnum
 from bokeh.util.logconfig import bokeh_logger as log
 from pathlib import Path
 from typing import Dict
+from multiprocessing import Queue
+from queue import Empty
+import collections
 
 
 class MapType(IntEnum):
@@ -24,7 +27,13 @@ class Data(VisualizationSharedDataStore):
         log.info(" -- INIT DATA")
         self.Viz = VisualizationSharedDataStore
         self.Viz.data = self
-
+        
+        self.qLanding = Queue()
+        self.qTakeoff = Queue()
+        self.qLocation = Queue()
+        
+        self.start_time = -1
+        
         self.map_data_dict = None
 
         # Create bounding box for the scope of mapping (contiguous USA)
@@ -45,6 +54,7 @@ class Data(VisualizationSharedDataStore):
                              'y': []},
                 "wind": {'spd_kts': 0,
                          'dir_deg': 0},
+                "mission_duration_min": 6,
             }
         elif(self.Viz.map_name is not None):
             self.map_data_dict = self.load_map_record(self.Viz.map_name)
@@ -66,6 +76,17 @@ class Data(VisualizationSharedDataStore):
         self.waterbodies_filepath = [os.path.join(os.path.basename(
             os.path.dirname(inspect.getfile(lambda: None))), 'static', 'waterbodies.svg')]
         
+        self.ownship_filepath = [os.path.join(os.path.basename(
+            os.path.dirname(inspect.getfile(lambda: None))), 'static', 'Picture2.png')]
+
+        self.ownship_data_source = ColumnDataSource({
+                'url': self.ownship_filepath,
+                'lat': [0],
+                'lon': [0],
+                'w': [20],
+                'h': [20],
+                })
+        
         self.wind_table_source = ColumnDataSource({
                 'spd_kts': [self.Viz.data.map_data_dict['wind']['spd_kts']],
                 'dir_deg': [self.Viz.data.map_data_dict['wind']['dir_deg']]})
@@ -79,9 +100,13 @@ class Data(VisualizationSharedDataStore):
                 'remaining_dur': [0],
                 'mission_stat': [0],
                 'lat': [0],
-                'lng': [0],
-                'status': [0],
-                'points': [0]})
+                'lon': [0],
+                'status': [0]})
+        
+        self.drone_pos_data_source = ColumnDataSource({
+                'lat': [0],
+                'lon': [0]})
+        
 
         # Table data sources
         if(self.Viz.mode == Mode.MAP_MAKER):
@@ -102,9 +127,13 @@ class Data(VisualizationSharedDataStore):
                 'ys': self.Viz.data.map_data_dict['data_fs']['ys'],
                 'fill_color': ['red']*len(self.Viz.data.map_data_dict['data_fs']['ys']),
                 'alpha': [0]*len(self.Viz.data.map_data_dict['data_fs']['ys'])} if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION else {})
+            
+        
+        
 
     def save_map_record(self) -> None:
         try:
+            log.info(" ---- Saving map")
             Path("maps").mkdir(parents=True, exist_ok=True)
             with open("maps/" + self.map_data_dict['map_name'] + ".json", 'w+') as outfile:
                 self.map_data_dict["generated_on"] = datetime.now().strftime(
@@ -118,10 +147,70 @@ class Data(VisualizationSharedDataStore):
                 json.dump(self.map_data_dict, outfile,
                           indent=4, sort_keys=True)
         except:
-            print(traceback.format_exc())
-            print("Map save encountered an issue (see traceback above)")
+            log.error(traceback.format_exc())
+            log.error("Map save encountered an issue (see traceback above)")
 
     def load_map_record(self, map_name) -> Dict:
         with open("maps/" + map_name + ".json") as f:
             map_data = json.load(f)
             return map_data
+
+    def check_landing_status(self):
+        try:
+            if(not self.qLanding.empty()):
+                log.info(" --- Updating landing status")
+            ln = self.qLanding.get(block=True, timeout=0.1)
+            if(ln.isLanded):
+                self.stats_table_source.patch({'status': [(0, "On the Ground")]})
+        except Empty:
+            pass
+    def check_takeoff_status(self):
+        try:
+            if(not self.qTakeoff.empty()):
+                log.info(" --- Updating takeoff status")
+            tn = self.qTakeoff.get(block=True, timeout=0.1)
+            if(tn.isTakenOff and self.start_time == -1):
+                self.start_time = tn.px4Time/1000.0
+                self.stats_table_source.patch({'status': [(0, "Taking Off")]})
+        except Empty:
+            pass
+    def update_local_location(self):
+        try:
+            if(not self.qLocation.empty()):
+                log.info(" --- Updating local location")
+            loc = self.qLocation.get(block=True, timeout=0.1)
+            
+            self.stats_table_source.patch({'elapsed_dur': [(0, loc.px4Time/1000.0 - self.start_time)],
+                                           'remaining_dur': [(0, self.map_data_dict['mission_duration_min']*60 - loc.px4Time/1000.0 - self.start_time)],
+                                           'lat': [(0, loc.latitude)],
+                                           'lon': [(0, loc.longitude)],
+                                           'status': [(0, "In Air")]})
+            
+            self.ownship_data_source.patch({'lat': [(0, loc.latitude)],
+                                           'lon': [(0, loc.longitude)]})
+            
+            
+            if(self.drone_pos_data_source.data['lat'][0] == 0):
+                self.drone_pos_data_source.data = {
+                    'lat': [loc.latitude],
+                    'lon': [loc.longitude]
+                }
+            else:
+                new_lat = self.flatten([self.drone_pos_data_source.data['lat'], loc.latitude])
+                new_lon = self.flatten([self.drone_pos_data_source.data['lon'], loc.longitude])
+                self.drone_pos_data_source.data = {
+                    'lat': new_lat,
+                    'lon': new_lon
+                }
+            log.info(self.drone_pos_data_source.data)
+            
+            
+        except Empty:
+            pass
+        
+    def flatten(self, x):
+        #https://stackoverflow.com/questions/2158395/flatten-an-irregular-list-of-lists
+        if isinstance(x, collections.Iterable):
+            return [a for i in x for a in self.flatten(i)]
+        else:
+            return [x]

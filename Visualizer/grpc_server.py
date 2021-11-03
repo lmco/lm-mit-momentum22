@@ -1,60 +1,62 @@
 from concurrent import futures
-import logging
-
 import grpc
 
 import viz_pb2 as viz_connect
 import viz_pb2_grpc as viz_connect_grpc
 
-import time
 import multiprocessing
 
-def vizBlock():
-    """
-    Simulate doing visualization things
-    """
-    print("sleep commence")
-    time.sleep(60)
-    print("sleep done")
+from bokeh.util.logconfig import bokeh_logger as log
 
 
 class Momentum22VizServicer(viz_connect_grpc.Momentum22VizServicer):
-    def __init__(self) -> None:
+    def __init__(self, ql, qt, qp) -> None:
+        self.qLanding = ql
+        self.qTakeoff = qt
+        self.qLocation = qp
         pass
     
     def SetLandingStatus(self, request, context):
         ack = viz_connect.ReqAck(msgId = request.msgId)
-        print(request)
+        self.qLanding.put(request)
+        log.info(ack)
         return ack
     
     def SetTakeoffStatus(self, request, context):
         ack = viz_connect.ReqAck(msgId = request.msgId)
-        print(request)
+        self.qTakeoff.put(request)
+        log.info(ack)
         return ack
     
     def SetDroneLocation(self, request, context):
         ack = viz_connect.ReqAck(msgId = request.msgId)
-        print(request)
+        self.qLocation.put(request)
+        log.info(ack)
         return ack
     
-def serve():
+def serveGrpc(qLanding, qTakeoff, qLocation):
     """
     Start the server and keep it alive until done
     """
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
     viz_connect_grpc.add_Momentum22VizServicer_to_server(
-        Momentum22VizServicer(), server)
+        Momentum22VizServicer(qLanding, qTakeoff, qLocation), server)
     server.add_insecure_port('[::]:51052')
     server.start()
-    server.wait_for_termination()
-    
-if __name__ == '__main__':
-    logging.basicConfig()
-    
+    log.info(" -- gRPC server started")
+    try:
+        server.wait_for_termination()
+    except KeyboardInterrupt:
+        server.stop(None)
+
+p = None
+
+def start(qLanding, qTakeoff, qLocation):
     # Throw the server into another process so that we can do viz tasks without interruptions
-    p = multiprocessing.Process(target=serve)
+    p = multiprocessing.Process(target=serveGrpc, args=(qLanding, qTakeoff, qLocation))
     p.start()
     
-    # Simulate doing viz tasks
-    vizBlock()
+def cleanUp():
+    p.join()
+    p.close()
     

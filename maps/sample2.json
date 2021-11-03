@@ -50,6 +50,7 @@
     "generated_on": "14/10/2021_22:10:52",
     "map_name": "sample2",
     "map_type": 0,
+    "mission_duration_min": 6,
     "wind": {
         "spd_kts": 0,
         "dir_deg": 0

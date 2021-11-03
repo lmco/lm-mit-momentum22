@@ -1,0 +1,32 @@
+{
+    "bounds": {
+        "maxx": [
+            -70.57993261039539
+        ],
+        "maxy": [
+            49.05530782178072
+        ],
+        "minx": [
+            -88.8309760697972
+        ],
+        "miny": [
+            41.42954708404876
+        ]
+    },
+    "data_fs": {
+        "xs": [],
+        "ys": []
+    },
+    "data_snr": {
+        "x": [],
+        "y": []
+    },
+    "generated_on": "03/11/2021_00:10:22",
+    "map_name": "big_test",
+    "map_type": 0,
+    "mission_duration_min": 6,
+    "wind": {
+        "dir_deg": 0,
+        "spd_kts": 0
+    }
+}

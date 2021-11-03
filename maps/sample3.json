@@ -60,6 +60,7 @@
     "generated_on": "18/10/2021_22:48:43",
     "map_name": "sample3",
     "map_type": 0,
+    "mission_duration_min": 6,
     "wind": {
         "spd_kts": 0,
         "dir_deg": 0

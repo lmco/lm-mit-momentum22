@@ -42,6 +42,7 @@
     "generated_on": "18/10/2021_23:00:47",
     "map_name": "SNR",
     "map_type": 1,
+    "mission_duration_min": 6,
     "wind": {
         "spd_kts": 0,
         "dir_deg": 0

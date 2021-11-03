@@ -1,3 +1,4 @@
+from functools import partial
 from visualizationSharedDataStore import VisualizationSharedDataStore
 from visualizationSharedDataStore import Mode
 from data import Data
@@ -10,6 +11,8 @@ from bokeh.util.logconfig import bokeh_logger as log
 
 from bokeh.io import curdoc
 from bokeh.plotting import Column, Row
+
+import grpc_server
 
 
 # https://stackoverflow.com/questions/22368458/how-to-make-argparse-print-usage-when-no-option-is-given-to-the-code
@@ -49,9 +52,11 @@ class Visualizer(VisualizationSharedDataStore):
         VizButton()
         Text()
 
-    def update(step):
-        log.info(" --- Updating the plot info")
-        pass
+    def update(self):
+        if self.Viz.mode == Mode.VISUALIZATION:
+            self.Viz.data.check_landing_status()
+            self.Viz.data.check_takeoff_status()
+            self.Viz.data.update_local_location()
 
     def serve(self) -> None:
         if self.Viz.mode == Mode.MAP_MAKER:
@@ -99,7 +104,9 @@ class Visualizer(VisualizationSharedDataStore):
                                                                sizing_mode="stretch_both"), sizing_mode="stretch_both"))
 
         if self.Viz.mode == Mode.VISUALIZATION:
-            curdoc().add_periodic_callback(self.update, 1000)  # period in ms
+            grpc_server.start(self.data.qLanding, self.data.qTakeoff, self.data.qLocation)
+            
+            curdoc().add_periodic_callback(self.update, 500)  # period in ms            
 
 
 visualizer = Visualizer()
