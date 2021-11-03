@@ -138,6 +138,5 @@ class student_base:
     
             
 if __name__ == "__main__":
-    #print("This script can't be run directly.  Create a class that inherits student_base, and run that instead.")
-    x = student_base()
-    x.run()
+    print("This script can't be run directly.  Create a class that inherits student_base, and run that instead.")
+
