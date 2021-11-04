@@ -1,51 +1,58 @@
 from student_base import student_base
 import time
-import asyncio
 
-class student_flight_controller(student_base):
+class my_flight_controller(student_base):
 	
-	async def student_main(self, drone):
+	def student_run(self, telemetry, commands):
+
+		# The telemetry dictionary contains fields that describe the drone's position and flight state.
+		# It updates continuously, so it can be polled for new information.
+		# Use a time.sleep() between polls to keep the CPU load down and give the background communications
+		# a chance to run.
 		
-		# The parameter 'drone' is an instance of a MavSDK Drone object, with communication happening in the background.
-		# You can query it for things like position.
+		print("Printing telemetry")
+		for i in range(4):
+			print(telemetry)
+			time.sleep(0.5)
+			
+		# Several commands are available to control the drone:
+		# 
+		# self.arm()
+		# self.disarm()
+		# self.takeoff()
+		# self.land()
+		# self.goto(lat, lon, alt)
+		#
+		# Note that the commands return immediately, not when the drone
+		# has actually reached the specified condition.
 		
-		print("Checking the drone's position")
+		print("Arming")
+		self.arm()
 		
-		async for position in drone.telemetry.position():
-			print(position)
-			break
-							
-		# You can also use it to send commands to the drone:
+		print("Taking off")
+		self.takeoff()
 		
-		print("To the sky!")
+		print("Waiting 6 seconds")
+		time.sleep(6)
 		
-		await drone.action.arm()
-		await drone.action.takeoff()
-		
-		# This is the command to delay by some amount of time
+		print("Goto somewhere else")
+		self.goto(telemetry['latitude'], telemetry['longitude'] - 0.00005, 0.5)
 		
 		print("Waiting 10 seconds")
-		
-		await asyncio.sleep(10)
-		
-		# Here we trigger a landing, and then wait for it to be complete
+		time.sleep(10)
 		
 		print("Landing")
+		self.land()
 		
-		await drone.action.land()
-		
-		async for in_air_now in drone.telemetry.in_air():
-			if not in_air_now:
-				break
-			else:
-				print("Still landing")
+		while telemetry['in_air']:
+			time.sleep(0.1)
 			
-		print("Finished")
-
-
+		print("Landed")
 		
-# This bit on code causes the flight controller to run when this file is executed.
 		
+# This bit of code just makes it so that this class actually runs when executed from the command line,
+# rather than just being silently defined.
+
 if __name__ == "__main__":
-	fcs = student_flight_controller()
+	fcs = my_flight_controller()
 	fcs.run()
