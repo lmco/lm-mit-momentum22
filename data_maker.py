@@ -1,3 +1,8 @@
+##################################################################
+#   Copyright 2021 Lockheed Martin Corporation.                  #
+#   Use of this software is subject to the BSD 3-Clause License. #
+##################################################################
+
 import geopandas as gpd
 from shapely.geometry import Polygon, Point
 
@@ -35,7 +40,7 @@ plt.xlim(contiguous_usa_bbox[0],contiguous_usa_bbox[2])
 plt.ylim(contiguous_usa_bbox[1],contiguous_usa_bbox[3])
 plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
             hspace = 0, wspace = 0)
-plt.savefig("MapMaker/static/waterbodies.svg", bbox_inches='tight', pad_inches=0.0)
+plt.savefig("Visualizer/static/waterbodies.svg", bbox_inches='tight', pad_inches=0.0)
 
 # left sjoin on position in order to check if the points are in the waterbodies (here so that I don't forget how to do it)
 # https://gis.stackexchange.com/questions/208546/check-if-a-point-falls-within-a-multipolygon-with-python
