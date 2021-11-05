@@ -14,19 +14,19 @@ class VizDataTable(VisualizationSharedDataStore):
 
         # Tables
         if(self.Viz.mode == Mode.VISUALIZATION):
-            self.columns_snr = [TableColumn(field="x", title="Lat"),
-                                TableColumn(field="y", title="Lon"),
+            self.columns_snr = [TableColumn(field="x", title="Lon"),
+                                TableColumn(field="y", title="Lat"),
                                 TableColumn(field='color', title='Color'),
                                 TableColumn(field='alpha', title='Transparency')]
-            self.columns_fs = [TableColumn(field="xs", title="Lats"),
-                               TableColumn(field="ys", title="Lons"),
+            self.columns_fs = [TableColumn(field="xs", title="Lons"),
+                               TableColumn(field="ys", title="Lats"),
                                TableColumn(field='fill_color', title='Color'),
                                TableColumn(field='alpha', title='Transparency')]
         else:
-            self.columns_snr = [TableColumn(field="x", title="Lat"),
-                                TableColumn(field="y", title="Lon")]
-            self.columns_fs = [TableColumn(field="xs", title="Lats"),
-                               TableColumn(field="ys", title="Lons")]
+            self.columns_snr = [TableColumn(field="x", title="Lon"),
+                                TableColumn(field="y", title="Lat")]
+            self.columns_fs = [TableColumn(field="xs", title="Lons"),
+                               TableColumn(field="ys", title="Lats")]
             
 
         self.bounds_table = DataTable(source=self.Viz.data.bounds_table_source,
@@ -59,8 +59,8 @@ class VizDataTable(VisualizationSharedDataStore):
                                     columns=[TableColumn(field="elapsed_dur", title="Elapsed Mission Duration"),
                                             TableColumn(field="remaining_dur", title="Remaining Mission Duration"),
                                             TableColumn(field="mission_stat", title="Found survivors" if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else "% Fires extinguished"),
+                                            TableColumn(field="lon", title="Drone Lon"),
                                             TableColumn(field="lat", title="Drone Lat"),
-                                            TableColumn(field="lon", title="Drone Lng"),
                                             TableColumn(field="status", title="Drone Status")],
                                     editable=False,
                                     sizing_mode="stretch_both")

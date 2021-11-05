@@ -34,8 +34,8 @@ class Plot(VisualizationSharedDataStore):
                               self.Viz.data.contiguous_usa_bbox[0],
                               h=self.Viz.data.contiguous_usa_bbox[3] - self.Viz.data.contiguous_usa_bbox[1])
         self.figure.image_url(url='url',
-                              x='lat',
-                              y='lon',
+                              x='lon',
+                              y='lat',
                               anchor='center',
                               w='w',
                               w_units='screen',
@@ -60,7 +60,7 @@ class Plot(VisualizationSharedDataStore):
             self.figure.add_tools(self.fire_tool)
             self.figure.toolbar.active_drag = self.fire_tool
         else:
-            self.figure.line(source=self.Viz.data.drone_pos_data_source, x='lat', y='lon', alpha=1, color='olivedrab', line_width=5)
+            self.figure.line(source=self.Viz.data.drone_pos_data_source, x='lon', y='lat', alpha=1, color='olivedrab', line_width=5)
             if(self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE):
                 self.survivor_renderer = self.figure.scatter(
                     x='x', y='y', color='color', alpha='alpha', source=self.Viz.data.survivors_table_source, size=5)

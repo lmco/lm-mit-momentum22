@@ -81,8 +81,8 @@ class Data(VisualizationSharedDataStore):
 
         self.ownship_data_source = ColumnDataSource({
                 'url': self.ownship_filepath,
-                'lat': [0],
                 'lon': [0],
+                'lat': [0],
                 'w': [20],
                 'h': [20],
                 })
@@ -99,13 +99,14 @@ class Data(VisualizationSharedDataStore):
                 'elapsed_dur': [0],
                 'remaining_dur': [0],
                 'mission_stat': [0],
-                'lat': [0],
                 'lon': [0],
+                'lat': [0],
                 'status': [0]})
         
         self.drone_pos_data_source = ColumnDataSource({
-                'lat': [0],
-                'lon': [0]})
+                'lon': [0],
+                'lat': [0]
+                })
         
 
         # Table data sources
@@ -182,27 +183,28 @@ class Data(VisualizationSharedDataStore):
             
             self.stats_table_source.patch({'elapsed_dur': [(0, loc.px4Time/1000.0 - self.start_time)],
                                            'remaining_dur': [(0, self.map_data_dict['mission_duration_min']*60 - loc.px4Time/1000.0 - self.start_time)],
-                                           'lat': [(0, loc.latitude)],
                                            'lon': [(0, loc.longitude)],
+                                           'lat': [(0, loc.latitude)],
                                            'status': [(0, "In Air")]})
             
-            self.ownship_data_source.patch({'lat': [(0, loc.latitude)],
-                                           'lon': [(0, loc.longitude)]})
+            self.ownship_data_source.patch({'lon': [(0, loc.longitude)],
+                                            'lat': [(0, loc.latitude)],
+                                           })
             
             
             if(self.drone_pos_data_source.data['lat'][0] == 0):
                 self.drone_pos_data_source.data = {
-                    'lat': [loc.latitude],
-                    'lon': [loc.longitude]
+                    'lon': [loc.longitude],
+                    'lat': [loc.latitude]
                 }
             else:
                 new_lat = self.flatten([self.drone_pos_data_source.data['lat'], loc.latitude])
                 new_lon = self.flatten([self.drone_pos_data_source.data['lon'], loc.longitude])
                 self.drone_pos_data_source.data = {
-                    'lat': new_lat,
-                    'lon': new_lon
+                    'lon': new_lon,
+                    'lat': new_lat
                 }
-            log.info(self.drone_pos_data_source.data)
+            log.info([self.drone_pos_data_source.data['lon'][-1], self.drone_pos_data_source.data['lat'][-1]])
             
             
         except Empty:

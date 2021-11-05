@@ -106,7 +106,7 @@ class Visualizer(VisualizationSharedDataStore):
         if self.Viz.mode == Mode.VISUALIZATION:
             grpc_server.start(self.data.qLanding, self.data.qTakeoff, self.data.qLocation)
             
-            curdoc().add_periodic_callback(self.update, 500)  # period in ms            
+            curdoc().add_periodic_callback(self.update, 10)  # period in ms            
 
 
 visualizer = Visualizer()
