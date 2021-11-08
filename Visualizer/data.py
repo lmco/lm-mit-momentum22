@@ -167,7 +167,7 @@ class Data(VisualizationSharedDataStore):
         try:
             if(not self.qLanding.empty()):
                 log.info(" --- Updating landing status")
-            ln = self.qLanding.get(block=True, timeout=0.1)
+            ln = self.qLanding.get(block=False)
             if(ln.isLanded):
                 self.stats_table_source.patch({'status': [(0, "On the Ground")]})
         except Empty:
@@ -176,7 +176,7 @@ class Data(VisualizationSharedDataStore):
         try:
             if(not self.qTakeoff.empty()):
                 log.info(" --- Updating takeoff status")
-            tn = self.qTakeoff.get(block=True, timeout=0.1)
+            tn = self.qTakeoff.get(block=False)
             if(tn.isTakenOff and self.start_time == -1):
                 self.start_time = tn.px4Time/1000.0
                 self.stats_table_source.patch({'status': [(0, "Taking Off")]})
@@ -186,7 +186,7 @@ class Data(VisualizationSharedDataStore):
         try:
             if(not self.qLocation.empty()):
                 log.info(" --- Updating local location")
-            loc = self.qLocation.get(block=True, timeout=0.1)
+            loc = self.qLocation.get(block=False)
             
             self.stats_table_source.patch({'elapsed_dur': [(0, loc.px4Time/1000.0 - self.start_time)],
                                            'remaining_dur': [(0, self.map_data_dict['mission_duration_min']*60 - loc.px4Time/1000.0 - self.start_time)],

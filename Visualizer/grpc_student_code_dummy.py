@@ -66,8 +66,8 @@ def worker():
 threading.Thread(target=worker, daemon=True).start()
 
 start_time = time.time()
-factor = 1
-time_steps = int(10/factor)
+factor = 0.01
+time_steps = int(10/factor/5)
 
 
 for item in range(time_steps):
@@ -88,7 +88,7 @@ for item in range(time_steps):
         qLanding.put(ln)
     else:
         print("location")
-        loc = viz_connect.Location(msgId=item + 1, latitude=(41.123456 + item*factor), longitude=(-82.123456 + item*factor), px4Time=(curr_time))
+        loc = viz_connect.Location(msgId=item + 1, latitude=(40.258338053379745 + item*0.5*factor), longitude=(-80.41417236584573 + item*0.5*factor), px4Time=(curr_time))
         qLocation.put(loc)
     
     
