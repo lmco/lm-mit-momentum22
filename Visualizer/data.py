@@ -42,10 +42,12 @@ class Data(VisualizationSharedDataStore):
         self.map_data_dict = None
 
         # Create bounding box for the scope of mapping (contiguous USA)
-        self.contiguous_usa_bbox = (-130.25390625,
-                                    22.55314748, -65.63232422, 49.55372551)
+        # self.area_bbox = (-130.25390625, 22.55314748, -65.63232422, 49.55372551)
+        
+        # Create bounding box for the scope of mapping (New England)
+        self.area_bbox = (-80.41417236584573, 40.258338053379745, -69.06461890186635, 44.5188750075358)
         if(self.Viz.mode == Mode.MAP_MAKER):
-            self.bbox = self.contiguous_usa_bbox
+            self.bbox = self.area_bbox
             self.map_data_dict = {
                 "map_name": "sample_name",
                 "map_type": MapType.FIRE_SUPPRESSION,

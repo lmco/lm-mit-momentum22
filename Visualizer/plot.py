@@ -3,6 +3,7 @@
 #   Use of this software is subject to the BSD 3-Clause License. #
 ##################################################################
 
+from bokeh.models.tools import WheelZoomTool
 from visualizationSharedDataStore import VisualizationSharedDataStore
 from visualizationSharedDataStore import Mode
 from data import MapType
@@ -27,17 +28,17 @@ class Plot(VisualizationSharedDataStore):
                              y_range=(
                                  self.Viz.data.bbox[1], self.Viz.data.bbox[3]),
                              toolbar_location='below',
-                             tools="pan, wheel_zoom, box_zoom, reset" if self.Viz.mode == Mode.MAP_MAKER else "reset",
+                             tools="pan, box_zoom, reset" if self.Viz.mode == Mode.MAP_MAKER else "reset",
                              sizing_mode="scale_both")
         self.figure.xgrid.grid_line_color = None
         self.figure.ygrid.grid_line_color = None
 
         self.figure.image_url(url=self.Viz.data.waterbodies_filepath,
-                              x=self.Viz.data.contiguous_usa_bbox[0],
-                              y=self.Viz.data.contiguous_usa_bbox[3],
-                              w=self.Viz.data.contiguous_usa_bbox[2] -
-                              self.Viz.data.contiguous_usa_bbox[0],
-                              h=self.Viz.data.contiguous_usa_bbox[3] - self.Viz.data.contiguous_usa_bbox[1])
+                              x=self.Viz.data.area_bbox[0],
+                              y=self.Viz.data.area_bbox[3],
+                              w=self.Viz.data.area_bbox[2] -
+                              self.Viz.data.area_bbox[0],
+                              h=self.Viz.data.area_bbox[3] - self.Viz.data.area_bbox[1])
         self.figure.image_url(url='url',
                               x='lon',
                               y='lat',
@@ -50,6 +51,9 @@ class Plot(VisualizationSharedDataStore):
         
 
         if(self.Viz.mode == Mode.MAP_MAKER):
+            self.wheel_zoom_tool = WheelZoomTool(maintain_focus=True)
+            self.figure.add_tools(self.wheel_zoom_tool)
+            
             self.survivor_renderer = self.figure.scatter(
                 x='x', y='y', color='orange', alpha=0.4, source=self.Viz.data.survivors_table_source, size=5)
             self.fires_renderer = self.figure.patches(
@@ -63,7 +67,6 @@ class Plot(VisualizationSharedDataStore):
             self.fire_tool = PolyDrawTool(renderers=[self.fires_renderer],
                                           description="Fire draw tool (select, double click on map to start, click once on map to add vertices, double click on map to end)")
             self.figure.add_tools(self.fire_tool)
-            self.figure.toolbar.active_drag = self.fire_tool
         else:
             self.figure.line(source=self.Viz.data.drone_pos_data_source, x='lon', y='lat', alpha=1, color='olivedrab', line_width=5)
             if(self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE):
