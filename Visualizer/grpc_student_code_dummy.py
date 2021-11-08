@@ -66,7 +66,9 @@ def worker():
 threading.Thread(target=worker, daemon=True).start()
 
 start_time = time.time()
-time_steps = 10
+factor = 1
+time_steps = int(10/factor)
+
 
 for item in range(time_steps):
     print(item)
@@ -75,7 +77,7 @@ for item in range(time_steps):
     
     curr_time = int((time.time()-start_time)*1000) #! NOTE: milliseconds
     # Queue up things to send
-    time.sleep(1)
+    time.sleep(factor)
     if(item == 0):
         print("takeoff")
         tn = viz_connect.TakeoffNotification(msgId=item + 1, isTakenOff=True, px4Time=(curr_time))
@@ -86,7 +88,7 @@ for item in range(time_steps):
         qLanding.put(ln)
     else:
         print("location")
-        loc = viz_connect.Location(msgId=item + 1, longitude=(41.123456 + item*1), latitude=(-82.123456 + item*1), px4Time=(curr_time))
+        loc = viz_connect.Location(msgId=item + 1, latitude=(41.123456 + item*factor), longitude=(-82.123456 + item*factor), px4Time=(curr_time))
         qLocation.put(loc)
     
     
