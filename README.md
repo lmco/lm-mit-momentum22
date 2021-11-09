@@ -1,4 +1,4 @@
-# Getting Started <!-- omit in toc -->
+# Getting Started (WIP, some sections may be irrelevant) <!-- omit in toc -->
 
 If you are viewing this file offline, the most up to date version of these instructions is located in the [project GitHub](https://github.com/lmco/lm-mit-momentum22).
 
