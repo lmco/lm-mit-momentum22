@@ -1,3 +1,8 @@
+##################################################################
+#   Copyright 2021 Lockheed Martin Corporation.                  #
+#   Use of this software is subject to the BSD 3-Clause License. #
+##################################################################
+
 cd ~/Momentum/PX4/PX4-Autopilot/
 export PX4_HOME_LAT=41.15
 export PX4_HOME_LON=-75.14
