@@ -272,7 +272,23 @@ cd ~/Momentum/lm-mit-momentum/tutorial/demos
 # Run mission file
 python3 demo_mission.py
 ```
-### 10.2. Launch Everything and Write an Autopilot Script
+### 10.2. Launch PX4, Visualizer, and Student Code
 
-TODO - discuss launching the sim, visualizer, and student's main script
+There are three steps to running the simulation
+1. Launching PX4 and setting its parameters
+2. Launching the Visualizer
+3. Running the student code
+
+The commands for this are below, with each run in a separate termianl window or tab.
+
+``` sh
+# Launch PX4 with the jMavSim simulation target and set the starting location to KBDR
+ bash launch_px4_stratford.bash
+ 
+ # Launch Visualizer with the test map
+ bokeh serve Visualizer --show --args -v stratford_sar
+ 
+ # Launch Student code
+ python3 student/student_example.py 
+```
 
