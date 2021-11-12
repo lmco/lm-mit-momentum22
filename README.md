@@ -11,33 +11,26 @@ If you are viewing this file offline, the most up to date version of these instr
 4. If you have specific questions that are not answered by this document, check out the constantantly updating [Q&A](https://github.com/katabeta/lm-mit-momentum/blob/master/QA.md).
 
 ## Table of Contents <!-- omit in toc -->
-<!-- TOC and section numbers automatically generated, do not manually edit -->
-- [1. Install Ubuntu 20.04 LTS](#1-install-ubuntu-2004-lts)
-  - [1.1. Basic steps to install Ubuntu outside of a Virtual Machine](#11-basic-steps-to-install-ubuntu-outside-of-a-virtual-machine)
-  - [1.2. Basic steps to install Ubuntu inside of a Virtual Machine](#12-basic-steps-to-install-ubuntu-inside-of-a-virtual-machine)
-- [2. Install VS Code IDE](#2-install-vs-code-ide)
-- [3. Get Gazebo and PX4](#3-get-gazebo-and-px4)
-  - [3.1. Clone PX4 and install Gazebo9](#31-clone-px4-and-install-gazebo9)
-  - [3.2. Build PX4](#32-build-px4)
-- [4. OPTIONAL Install QGroundControl](#4-optional-install-qgroundcontrol)
-  - [4.1. Fix problem where PX4 running Gazebo can't connect to QGroundControl](#41-fix-problem-where-px4-running-gazebo-cant-connect-to-qgroundcontrol)
-- [5. Install MAVSDK](#5-install-mavsdk)
-- [6. Install navpy and numpy](#6-install-navpy-and-numpy)
-- [7. Download py3gazebo](#7-download-py3gazebo)
-- [8. Adding LM-provided LiDAR and terrain](#8-adding-lm-provided-lidar-and-terrain)
-  - [8.1. Creating your own terrain and LiDAR](#81-creating-your-own-terrain-and-lidar)
-- [9. Install py3gazebo](#9-install-py3gazebo)
-- [10. Launch simulation](#10-launch-simulation)
-  - [10.1. Set home position](#101-set-home-position)
-  - [10.2. Launch PX4 with Gazebo](#102-launch-px4-with-gazebo)
-  - [10.3. Set PX4 firmware parameters](#103-set-px4-firmware-parameters)
-  - [10.4. How to find sensor topic name, message type, and get sample output](#104-how-to-find-sensor-topic-name-message-type-and-get-sample-output)
-  - [10.5. OPTIONAL Launch QGroundControl](#105-optional-launch-qgroundcontrol)
-- [11. Run a mission file](#11-run-a-mission-file)
-- [12. Query sensor values using py3gazebo - GPS Example](#12-query-sensor-values-using-py3gazebo---gps-example)
-- [13. Getting started with MAVSDK](#13-getting-started-with-mavsdk)
-  - [13.1. Download MAVSDK examples](#131-download-mavsdk-examples)
-  - [13.2. Run a MAVSDK example (PX4 and Gazebo have to be running)](#132-run-a-mavsdk-example-px4-and-gazebo-have-to-be-running)
+* [1. Install Ubuntu 20.04 LTS](#1-install-ubuntu-2004-lts)
+	+ [1.1. Basic steps to install Ubuntu outside of a Virtual Machine](#11-basic-steps-to-install-ubuntu-outside-of-a-virtual-machine)
+	+ [1.2. Basic steps to install Ubuntu inside of a Virtual Machine](#12-basic-steps-to-install-ubuntu-inside-of-a-virtual-machine)
+* [2. Install VS Code IDE](#2-install-vs-code-ide)
+* [3. Get PX4](#3-get-px4)
+	+ [3.1. Clone PX4](#31-clone-px4)
+	+ [3.2. Build PX4](#32-build-px4)
+* [4. Install MAVSDK](#4-install-mavsdk)
+* [5. Install navpy and numpy](#5-install-navpy-and-numpy)
+	+ [6 Install Dependencies for Visualizer](#6-install-dependencies-for-visualizer)
+* [7. Clone the Momentum22 Project folder from GitHub](#7-clone-the-momentum22-project-folder-from-github)
+* [8. Launch simulation and run mission](#8-launch-simulation-and-run-mission)
+	+ [8.1. Launch PX4, Visualizer, and Student Code with provided maps and scripts](#81-launch-px4-visualizer-and-student-code-with-provided-maps-and-scripts)
+	+ [8.2. OPTIONAL: Set home position and launch PX4 Manually](#82-optional-set-home-position-and-launch-px4-manually)
+		- [8.2.1 OPTIONAL: Set PX4 firmware parameters manually](#821-optional-set-px4-firmware-parameters-manually)
+	+ [8.3 OPTIONAL: Create and load your own Maps in the Visualizer](#83-optional-create-and-load-your-own-maps-in-the-visualizer)
+  + [8.4 OPTIONAL Install QGroundControl](#84-optional-install-qgroundcontrol)
+		- [8.4.1. Fix problem where PX4 can't connect to QGroundControl](#841-fix-problem-where-px4-cant-connect-to-qgroundcontrol)
+		- [8.4.2 Launch QGroundControl](#842-launch-qgroundcontrol)
+
 <!-- TOC and section numbers automatically generated, do not manually edit -->
 
 ## 1. Install Ubuntu 20.04 LTS
@@ -250,10 +243,10 @@ param reset_all
 
 ### 8.3 OPTIONAL: Create and load your own Maps in the Visualizer
 
-# Visualizer
+### Visualizer
 Utility to make and use MIT Momentum competition maps interactively.
 
-## How to use
+### How to use
 1. Navigate your command line to the root folder of the project (this Visualizer folder should be a subfolder to the root)
 2. Run the visualizer in one of two modes
    1. Enter `bokeh serve Visualizer --show --args -m` on your commandline, press `Enter` for the MapMaker
