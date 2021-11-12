@@ -134,7 +134,136 @@ Take note:
 - IP-address on the line that looks like `[Msg] Publicized address: 192.168.0.10` will be useful if PX4 can't connect to QGroundControl when running Gazebo.
 - IP-address on the line that looks like `[Msg] Connected to gazebo master @ http://127.0.0.1:11345` will be useful when setting up py3gazebo.
 
-## 4. OPTIONAL Install QGroundControl
+## 4. Install MAVSDK
+
+MAVSDK provides the Python hooks to interface with PX4. This allows the user to control the drone in a programmatic way, enabling complex missions and performing intricate algorithms.
+
+Summary of [Python MAVSDK installation guide](https://github.com/mavlink/MAVSDK-Python#mavsdk-python):
+
+``` sh
+# Install MAVSDK Python library
+pip3 install mavsdk
+```
+
+## 5. Install navpy and numpy
+
+Navpy provides coordinate system conversion functions
+
+``` sh
+pip3 install numpy
+pip3 install navpy
+```
+
+
+### 6 Install Dependencies for Visualizer
+
+``` sh
+pip3 install bokeh
+pip3 install geopandas
+pip3 install grpcio-tools
+```
+Refer to the [geopandas](https://geopandas.org/getting_started/install.html#installing-with-pip) website if you experience issues with missing dependencies for geopandas.
+
+## 7. Clone the Momentum22 Project folder from GitHub
+``` sh
+# Get into the main project folder
+cd ~/Momentum
+
+# Clone the project 
+git clone https://github.com/lmco/lm-mit-momentum22.git
+```
+
+## 8. Launch simulation and run mission  
+
+### 8.1. Launch PX4, Visualizer, and Student Code with provided maps and scripts
+
+There are three steps to running the simulation
+1. Launching PX4 and setting its parameters
+2. Launching the Visualizer
+3. Running the student code
+
+The commands for this are below, with each run in a separate termianl window or tab.
+
+``` sh
+# Launch PX4 with the jMavSim simulation target and set the starting location to KBDR
+ bash launch_px4_boston.bash
+```
+
+``` sh
+ # Launch Visualizer with the test map
+ bokeh serve Visualizer --show --args -v boston_sar
+```
+
+``` sh
+ # Launch Student code
+ python3 student/student_SAR_example_boston.py 
+```
+
+### 8.2. OPTIONAL: Set home position and launch PX4 Manually
+
+Setting the home position will ensure that the Visualizer, PX4, and the Python mission are on the same page about where the drone is supposed to be. The provided launch scripts in the lm-mit-momentum22 project will automatically launch PX4 with the correct home position for the corresponding maps. These instructions are for manually setting your own home position.
+
+To Manually set a home position:
+``` sh
+# Get into the PX4 project folder
+cd ~/Momentum/PX4/PX4-Autopilot
+
+# https://dev.px4.io/master/en/simulation/gazebo.html#set-custom-takeoff-location
+export PX4_HOME_LAT=0 # Deg
+export PX4_HOME_LON=0 # Deg
+export PX4_HOME_ALT=0 # Meters
+```
+
+To Launch PX4 Manually:
+``` sh
+# Get into the PX4 project folder
+cd ~/Momentum/PX4/PX4-Autopilot
+
+# Launch PX4 with jmavsim as the simulation target
+HEADLESS=1 make px4_sitl jmavsim
+
+# HEADLESS=1 turns off the jmavsim visuals
+# "sitl" == "Software in the Loop"
+# jmavsim == simulation target
+
+```
+
+#### 8.2.1 OPTIONAL: Set PX4 firmware parameters manually
+
+The PX4 firmware parameters set the constants used in the control laws of the autopilot. The following shows how to set the maximum velocities for the drone and load/save these parameters to file, as well as reset them to defaults.
+
+``` sh
+# Run from the shell (with pxh>) after launching PX4
+# Set params manually
+# https://dev.px4.io/master/en/advanced/parameter_reference.html
+param set MPC_Z_VEL_MAX_DN 1.0 # m/s, max vertical velocity down
+param set MPC_Z_VEL_MAX_UP 3.0 # m/s, max vertical velocity up
+param set MPC_XY_VEL_MAX  12.0 # m/s, max horizontal velocity
+
+# Or load from file (root location /PX4-Autopilot/build/px4_sitl_default/tmp/rootfs)
+param load iris_defaults # Reset the parameters to when file was saved
+param save # Optionally save params (not done automatically with load)
+
+# Reset all params to default
+param reset_all
+```
+
+### 8.3 OPTIONAL: Create and load your own Maps in the Visualizer
+
+# Visualizer
+Utility to make and use MIT Momentum competition maps interactively.
+
+## How to use
+1. Navigate your command line to the root folder of the project (this Visualizer folder should be a subfolder to the root)
+2. Run the visualizer in one of two modes
+   1. Enter `bokeh serve Visualizer --show --args -m` on your commandline, press `Enter` for the MapMaker
+   2. Enter `bokeh serve Visualizer --show --args -v <mapname>` on your commandline, where `<mapname>` is a map stored in the maps directory, press `Enter` for the Visualizer
+3. A web browser tab should open with the Visualizer utility at http://localhost:5006/Visualizer
+
+**NOTE:** We strongly recommend using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browser are untested.
+
+
+### 8.4 OPTIONAL Install QGroundControl
 
 QGroundControl can be seen as a companion application to PX4. It provides a GUI interface for some of the most commonly used parameters in PX4. It also provides a contextualized view of the running mission. This software is not necessary to complete the project, but it may be useful for debugging.
 
@@ -167,7 +296,7 @@ chmod +x ./QGroundControl.AppImage
 ./QGroundControl.AppImage # (or double-click)
 ```
 
-### 4.1. Fix problem where PX4 can't connect to QGroundControl
+#### 8.4.1. Fix problem where PX4 can't connect to QGroundControl
 
 Summary of [forum post solving this issue](https://discuss.px4.io/t/how-to-make-qgcontrol-connect-to-gazebo-simulation-instance-in-another-host-in-same-lan/9941):
 
@@ -190,68 +319,7 @@ e.g.
 ``` sh
 mavlink start -x -u $udp_gcs_port_local -r 4000000 -t 192.168.0.10
 ```
-
-## 5. Install MAVSDK
-
-MAVSDK provides the Python hooks to interface with PX4. This allows the user to control the drone in a programmatic way, enabling complex missions and performing intricate algorithms.
-
-Summary of [Python MAVSDK installation guide](https://github.com/mavlink/MAVSDK-Python#mavsdk-python):
-
-``` sh
-# Install MAVSDK Python library
-pip3 install mavsdk
-```
-
-## 6. Install navpy and numpy
-
-Navpy provides coordinate system conversion functions
-
-``` sh
-pip3 install numpy
-pip3 install navpy
-```
-
-## 10. Launch simulation
-
-### 10.1. Set home position
-
-Setting the home position will ensure that Gazebo, PX4, and the Python mission are on the same page about where the drone is supposed to be.
-
-``` sh
-# Get into the PX4 project folder
-cd ~/Momentum/PX4/PX4-Autopilot
-
-# Source home position
-source set_home.sh
-
-# or do this from anywhere by hand
-# https://dev.px4.io/master/en/simulation/gazebo.html#set-custom-takeoff-location
-export PX4_HOME_LAT=0 # Deg
-export PX4_HOME_LON=0 # Deg
-export PX4_HOME_ALT=0 # Meters
-```
-
-### 10.3. Set PX4 firmware parameters
-
-The PX4 firmware parameters set the constants used in the control laws of the autopilot. The following shows how to set the maximum velocities for the drone and load/save these parameters to file, as well as reset them to defaults.
-
-``` sh
-# Run from the shell (with pxh>) after launching PX4
-# Set params manually
-# https://dev.px4.io/master/en/advanced/parameter_reference.html
-param set MPC_Z_VEL_MAX_DN 1.0 # m/s, max vertical velocity down
-param set MPC_Z_VEL_MAX_UP 3.0 # m/s, max vertical velocity up
-param set MPC_XY_VEL_MAX  12.0 # m/s, max horizontal velocity
-
-# Or load from file (root location /PX4-Autopilot/build/px4_sitl_default/tmp/rootfs)
-param load iris_defaults # Reset the parameters to when file was saved
-param save # Optionally save params (not done automatically with load)
-
-# Reset all params to default
-param reset_all
-```
-
-### 10.5. OPTIONAL Launch QGroundControl
+#### 8.4.2 Launch QGroundControl
 
 Summary of [QGRoundControl installation instructions](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html):
 
@@ -263,32 +331,4 @@ cd ~/Momentum/
 ./QGroundControl.AppImage # (or double-click)
 ```
 
-## 11. Run a mission file
-
-``` sh
-# Get into the folder with the mission file
-cd ~/Momentum/lm-mit-momentum/tutorial/demos
-
-# Run mission file
-python3 demo_mission.py
-```
-### 10.2. Launch PX4, Visualizer, and Student Code
-
-There are three steps to running the simulation
-1. Launching PX4 and setting its parameters
-2. Launching the Visualizer
-3. Running the student code
-
-The commands for this are below, with each run in a separate termianl window or tab.
-
-``` sh
-# Launch PX4 with the jMavSim simulation target and set the starting location to KBDR
- bash launch_px4_stratford.bash
- 
- # Launch Visualizer with the test map
- bokeh serve Visualizer --show --args -v stratford_sar
- 
- # Launch Student code
- python3 student/student_example.py 
-```
 
