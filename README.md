@@ -20,7 +20,7 @@ If you are viewing this file offline, the most up to date version of these instr
 	+ [3.2. Build PX4](#32-build-px4)
 * [4. Install MAVSDK](#4-install-mavsdk)
 * [5. Install navpy and numpy](#5-install-navpy-and-numpy)
-	+ [6 Install Dependencies for Visualizer](#6-install-dependencies-for-visualizer)
+* [6. Install Dependencies for Visualizer](#6-install-dependencies-for-visualizer)
 * [7. Clone the Momentum22 Project folder from GitHub](#7-clone-the-momentum22-project-folder-from-github)
 * [8. Launch simulation and run mission](#8-launch-simulation-and-run-mission)
 	+ [8.1. Launch PX4, Visualizer, and Student Code with provided maps and scripts](#81-launch-px4-visualizer-and-student-code-with-provided-maps-and-scripts)
@@ -148,7 +148,7 @@ pip3 install navpy
 ```
 
 
-### 6 Install Dependencies for Visualizer
+## 6. Install Dependencies for Visualizer
 
 ``` sh
 pip3 install bokeh
@@ -156,6 +156,7 @@ pip3 install geopandas
 pip3 install grpcio-tools
 ```
 Refer to the [geopandas](https://geopandas.org/getting_started/install.html#installing-with-pip) website if you experience issues with missing dependencies for geopandas.
+
 
 ## 7. Clone the Momentum22 Project folder from GitHub
 ``` sh
@@ -166,10 +167,10 @@ cd ~/Momentum
 git clone https://github.com/lmco/lm-mit-momentum22.git
 ```
 
+
 ## 8. Launch simulation and run mission  
 
 ### 8.1. Launch PX4, Visualizer, and Student Code with provided maps and scripts
-
 There are three steps to running the simulation
 1. Launching PX4 and setting its parameters
 2. Launching the Visualizer
@@ -191,6 +192,7 @@ The commands for this are below, with each run in a separate termianl window or 
  # Launch Student code
  python3 student/student_SAR_example_boston.py 
 ```
+
 
 ### 8.2. OPTIONAL: Set home position and launch PX4 Manually
 
@@ -221,6 +223,7 @@ HEADLESS=1 make px4_sitl jmavsim
 
 ```
 
+
 #### 8.2.1 OPTIONAL: Set PX4 firmware parameters manually
 
 The PX4 firmware parameters set the constants used in the control laws of the autopilot. The following shows how to set the maximum velocities for the drone and load/save these parameters to file, as well as reset them to defaults.
@@ -240,6 +243,7 @@ param save # Optionally save params (not done automatically with load)
 # Reset all params to default
 param reset_all
 ```
+
 
 ### 8.3 OPTIONAL: Create and load your own Maps in the Visualizer
 
@@ -312,6 +316,7 @@ e.g.
 ``` sh
 mavlink start -x -u $udp_gcs_port_local -r 4000000 -t 192.168.0.10
 ```
+
 #### 8.4.2 Launch QGroundControl
 
 Summary of [QGRoundControl installation instructions](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html):
