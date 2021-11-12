@@ -38,29 +38,29 @@ class my_flight_controller(student_base):
 		print("Waiting 6 seconds")
 		time.sleep(6)
 		
-		# First Survivor
-		print("Goto first survivor")
-		goalLat = 41.146993387180366 # first survivor
-		goalLon = -75.1402624145687
+		# Get Water
+		print("Get to water")
+		goalLat = 42.3635 # water
+		goalLon = -70.997
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 		tol = 0.0001 # Approximately 50 feet tolerance
 		while err > tol:
-			print('Aircraft is enroute to first survivor')
+			print('Aircraft is enroute to water')
 			time.sleep(10)
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 
-		# Second survivor
-		print("Goto second survivor")
-		goalLat = 41.14604751229621 # second survivor
-		goalLon = -75.13325541194668
+		# fire
+		print("Goto fire")
+		goalLat = 42.363 # fire
+		goalLon = -71
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 		tol = 0.0001 # Approximately 50 feet tolerance
 		while err > tol:
-			print('Aircraft is enroute second survivor')
+			print('Aircraft is enroute to fire')
 			time.sleep(10)
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 			
