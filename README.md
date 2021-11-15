@@ -64,7 +64,7 @@ The software required for this project runs and is supported only in Ubuntu 18.0
 
 Due to compatibility issues between the Python Moving Map visualization and the Firefox browser, Google Chrome will need to be installed and configured as the default browser.
 
-Summary of [PX4 simulation with Gazebo](https://dev.px4.io/master/en/simulation/gazebo.html):
+Summary of [How to Install Google Chrome on Ubuntu 20.04](https://linuxhint.com/ubuntu_20-04_google_chrome_installation_guide/):
 
 ``` sh
 # Download the Google Chrome installation file
