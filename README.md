@@ -202,7 +202,7 @@ cd ~/Momentum/lm-mit-momentum22
 ```
 
 ``` sh
-# Launch PX4 with the jMavSim simulation target and set the starting location to KBDR
+# Launch PX4 with the jMavSim simulation target and set the starting location to Boston Logan Airport (KBOS)
  bash launch_px4_boston.bash
 ```
 
@@ -280,7 +280,7 @@ Utility to make and use MIT Momentum competition maps interactively.
    2. Enter `bokeh serve Visualizer --show --args -v <mapname>` on your commandline, where `<mapname>` is a map stored in the maps directory, press `Enter` for the Visualizer
 3. A web browser tab should open with the Visualizer utility at http://localhost:5006/Visualizer
 
-**NOTE:** We strongly recommend using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browser are untested.
+**NOTE:** We advise using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browsers are untested.
 
 
 ### 8.4 OPTIONAL Install QGroundControl
