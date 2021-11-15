@@ -14,6 +14,7 @@ If you are viewing this file offline, the most up to date version of these instr
 * [1. Install Ubuntu 20.04 LTS](#1-install-ubuntu-2004-lts)
 	+ [1.1. Basic steps to install Ubuntu outside of a Virtual Machine](#11-basic-steps-to-install-ubuntu-outside-of-a-virtual-machine)
 	+ [1.2. Basic steps to install Ubuntu inside of a Virtual Machine](#12-basic-steps-to-install-ubuntu-inside-of-a-virtual-machine)
+	+ [1.3. Basic steps to install Google Chrome as the Default Browser](#13-basic-steps-to-install-google-chrome-as-the-default-browser)
 * [2. Install VS Code IDE](#2-install-vs-code-ide)
 * [3. Get PX4](#3-get-px4)
 	+ [3.1. Clone PX4](#31-clone-px4)
@@ -58,6 +59,23 @@ The software required for this project runs and is supported only in Ubuntu 18.0
 2. [Download an Ubuntu image](https://ubuntu.com/download/desktop)
 3. [Verify image download is not corrupted](https://ubuntu.com/tutorials/how-to-verify-ubuntu#1-overview)
 4. [Install Ubuntu in VirtualBox](https://brb.nci.nih.gov/seqtools/installUbuntu.html)
+
+### 1.3. Basic steps to install Google Chrome as the Default Browser
+
+Due to compatibility issues between the Python Moving Map visualization and the Firefox browser, Google Chrome will need to be installed and configured as the default browser.
+
+Summary of [PX4 simulation with Gazebo](https://dev.px4.io/master/en/simulation/gazebo.html):
+
+``` sh
+# Download the Google Chrome installation file
+wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+
+# Install Google Chrome
+sudo dpkg -i google-chrome-stable_current_amd64.deb
+
+# Launch Google Chrome and set as default browser
+google-chrome
+```
 
 ## 2. Install VS Code IDE
 
