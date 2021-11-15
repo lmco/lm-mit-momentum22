@@ -176,7 +176,12 @@ There are three steps to running the simulation
 2. Launching the Visualizer
 3. Running the student code
 
-The commands for this are below, with each run in a separate termianl window or tab.
+The commands for this are below, with each run in a separate terminal window or tab.
+
+``` sh
+# Get into the Momentum22 project folder
+cd ~/Momentum/lm-mit-momentum22
+```
 
 ``` sh
 # Launch PX4 with the jMavSim simulation target and set the starting location to KBDR
