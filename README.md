@@ -43,10 +43,10 @@ To copy updates from the GitHub repository, run `git pull` from the cloned direc
 	- [9.1. Launch PX4, Visualizer, and Student Code with provided maps and scripts](#91-launch-px4-visualizer-and-student-code-with-provided-maps-and-scripts)
 	- [9.2. OPTIONAL: Set home position and launch PX4 Manually](#92-optional-set-home-position-and-launch-px4-manually)
 		- [9.2.1 OPTIONAL: Set PX4 firmware parameters manually](#921-optional-set-px4-firmware-parameters-manually)
-	- [9.3 OPTIONAL: Create and load your own Maps in the Visualizer](#93-optional-create-and-load-your-own-maps-in-the-visualizer)
-	- [9.4 OPTIONAL Install QGroundControl](#94-optional-install-qgroundcontrol)
+	- [9.3. OPTIONAL: Create and load your own Maps in the Visualizer](#93-optional-create-and-load-your-own-maps-in-the-visualizer)
+	- [9.4. OPTIONAL Install QGroundControl](#94-optional-install-qgroundcontrol)
 		- [9.4.1. Fix problem where PX4 can't connect to QGroundControl](#941-fix-problem-where-px4-cant-connect-to-qgroundcontrol)
-		- [9.4.2 Launch QGroundControl](#942-launch-qgroundcontrol)
+		- [9.4.2. Launch QGroundControl](#942-launch-qgroundcontrol)
 
 <!-- TOC and section numbers automatically generated, do not manually edit -->
 
@@ -292,7 +292,7 @@ param save # Optionally save params (not done automatically with load)
 param reset_all
 ```
 
-### 9.3 OPTIONAL: Create and load your own Maps in the Visualizer
+### 9.3. OPTIONAL: Create and load your own Maps in the Visualizer
 
 1. Navigate your command line to the root folder of the project (this Visualizer folder should be a subfolder to the root)
 2. Run the visualizer in one of two modes (to either create or run with a map)
@@ -302,7 +302,7 @@ param reset_all
 
 **NOTE:** We advise using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browsers are untested.
 
-### 9.4 OPTIONAL Install QGroundControl
+### 9.4. OPTIONAL Install QGroundControl
 
 QGroundControl can be seen as a companion application to PX4. It provides a GUI interface for some of the most commonly used parameters in PX4. It also provides a contextualized view of the running mission. This software is not necessary to complete the project, but it may be useful for debugging.
 
@@ -359,7 +359,7 @@ e.g.
 mavlink start -x -u $udp_gcs_port_local -r 4000000 -t 192.168.0.10
 ```
 
-#### 9.4.2 Launch QGroundControl
+#### 9.4.2. Launch QGroundControl
 
 Summary of [QGRoundControl installation instructions](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html):
 
