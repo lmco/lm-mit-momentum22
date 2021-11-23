@@ -20,6 +20,11 @@ from typing import Dict
 from multiprocessing import Queue
 from queue import Empty
 import collections
+from shapely.geometry import Point, Polygon
+from shapely.ops import transform
+from rtree import index
+import pyproj
+from functools import partial
 
 
 class MapType(IntEnum):
@@ -79,6 +84,35 @@ class Data(VisualizationSharedDataStore):
         # Convert data to geojson for bokeh
         self.usa_states_outlines_geojson = GeoJSONDataSource(
             geojson=usa_state_outlines.to_json())
+        
+        self.waterbodies = gpd.read_file('data/waterbodies.geojson', bbox=self.bbox, crs="EPSG:4326")
+        
+        self.radius_of_influence = 50  # in m
+        
+        self.polygons_of_interest = []
+        if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION:
+            for i in range(0, len(self.map_data_dict["data_fs"]['xs'])):
+                xs = self.map_data_dict["data_fs"]['xs'][i]
+                ys = self.map_data_dict["data_fs"]['ys'][i]
+                
+                self.polygons_of_interest.append(Polygon(tuple(zip(xs, ys))))
+                self.starting_fire_area = 0
+                for polygon in self.polygons_of_interest:
+                    self.starting_fire_area = self.starting_fire_area + polygon.area*6370**2 
+                
+        else:
+            merged_list = tuple(zip(self.map_data_dict["data_snr"]['x'], self.map_data_dict["data_snr"]['y'])) 
+            for survivor in merged_list:
+                self.polygons_of_interest.append(self.point_to_circle(survivor, 5))
+        
+        
+        self.survivors_found = 0
+        
+        self.water_limit = 100
+        self.water_quantity = 0
+        self.water_start_time = -1
+        
+        self.fire_last_observed_time = -1
 
         self.waterbodies_filepath = [os.path.join(os.path.basename(
             os.path.dirname(inspect.getfile(lambda: None))), 'static', 'waterbodies.svg')]
@@ -108,7 +142,8 @@ class Data(VisualizationSharedDataStore):
                 'mission_stat': [0],
                 'lon': [0],
                 'lat': [0],
-                'status': [0]})
+                'status': [0],
+                'score': [0]})
         
         self.drone_pos_data_source = ColumnDataSource({
                 'lon': [0],
@@ -134,7 +169,15 @@ class Data(VisualizationSharedDataStore):
                 'xs': self.Viz.data.map_data_dict['data_fs']['xs'],
                 'ys': self.Viz.data.map_data_dict['data_fs']['ys'],
                 'fill_color': ['red']*len(self.Viz.data.map_data_dict['data_fs']['ys']),
-                'alpha': [0]*len(self.Viz.data.map_data_dict['data_fs']['ys'])} if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION else {})
+                'alpha': [1]*len(self.Viz.data.map_data_dict['data_fs']['ys'])} if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION else {})
+            
+        self.debug_radii_table_source = ColumnDataSource({
+                'xs': [list(poly.exterior.coords.xy[0]) for poly in self.polygons_of_interest],
+                'ys': [list(poly.exterior.coords.xy[1]) for poly in self.polygons_of_interest]})
+        
+        self.debug_drone_table_source = ColumnDataSource({
+                'xs': [0],
+                'ys': [0]})
             
         
         
@@ -172,6 +215,7 @@ class Data(VisualizationSharedDataStore):
                 self.stats_table_source.patch({'status': [(0, "On the Ground")]})
         except Empty:
             pass
+        
     def check_takeoff_status(self):
         try:
             if(not self.qTakeoff.empty()):
@@ -182,6 +226,7 @@ class Data(VisualizationSharedDataStore):
                 self.stats_table_source.patch({'status': [(0, "Taking Off")]})
         except Empty:
             pass
+        
     def update_local_location(self):
         try:
             if(not self.qLocation.empty()):
@@ -213,6 +258,14 @@ class Data(VisualizationSharedDataStore):
                 }
             log.info([self.drone_pos_data_source.data['lon'][-1], self.drone_pos_data_source.data['lat'][-1]])
             
+            drone_circle = self.point_to_circle((loc.longitude, loc.latitude), self.radius_of_influence)
+            if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION:
+                self.fire_suppression_intersections(drone_circle, loc.px4Time)
+            else:
+                self.snr_intersections(drone_circle)
+                
+            self.debug_drone_table_source.patch({'xs': [(0, list(drone_circle.exterior.coords.xy[0]))],
+                                                'ys': [(0, list(drone_circle.exterior.coords.xy[1]))]})           
             
         except Empty:
             pass
@@ -223,3 +276,136 @@ class Data(VisualizationSharedDataStore):
             return [a for i in x for a in self.flatten(i)]
         else:
             return [x]
+    
+    def point_to_circle(self, point_coord, radius):
+        # https://gis.stackexchange.com/questions/367496/plot-a-circle-with-a-given-radius-around-points-on-map-using-python
+        lon, lat = point_coord
+
+        local_azimuthal_projection = "+proj=aeqd +R=6371000 +units=m +lat_0={} +lon_0={}".format(
+            lat, lon
+        )
+        wgs84_to_aeqd = partial(
+            pyproj.transform,
+            pyproj.Proj("+proj=longlat +datum=WGS84 +no_defs"),
+            pyproj.Proj(local_azimuthal_projection),
+        )
+        aeqd_to_wgs84 = partial(
+            pyproj.transform,
+            pyproj.Proj(local_azimuthal_projection),
+            pyproj.Proj("+proj=longlat +datum=WGS84 +no_defs"),
+        )
+
+        center = Point(float(lon), float(lat))
+        point_transformed = transform(wgs84_to_aeqd, center)
+        buffer = point_transformed.buffer(radius)
+        
+        polygon = transform(aeqd_to_wgs84, buffer)
+        # Get the polygon with lat lon coordinates
+        return polygon
+    
+    def fire_suppression_intersections(self, drone_circle, time_location_observed):        
+        object_indeces = self.check_drone_location_against_object_of_interest(drone_circle, self.polygons_of_interest)
+        fire_area_now = 0
+        if(len(object_indeces) > 0 and self.water_quantity > 0):
+            if(self.fire_last_observed_time == -1):
+                self.fire_last_observed_time = time_location_observed
+                
+            for idx in object_indeces:
+                polygon_reduction_factor = 0.075
+                if(self.water_quantity > ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0):
+                    self.polygons_of_interest[idx] = self.shrink_shapely_polygon(self.polygons_of_interest[idx], polygon_reduction_factor * ((time_location_observed - self.fire_last_observed_time)/1000.0))
+                
+                    self.water_quantity -= ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0
+                else:
+                    factor = self.water_quantity / ( ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0 ) * polygon_reduction_factor
+                    self.polygons_of_interest[idx] = self.shrink_shapely_polygon(self.polygons_of_interest[idx], factor * ((time_location_observed - self.fire_last_observed_time)/1000.0))
+                    self.water_quantity = 0
+                    
+                if(self.polygons_of_interest[idx].is_empty):
+                    self.fires_table_source.patch({ 'xs': [(idx, [0])],
+                                                    'ys': [(idx, [0])]})
+                else:
+                    self.fires_table_source.patch({ 'xs': [(idx, list(self.polygons_of_interest[idx].exterior.coords.xy[0]))],
+                                                    'ys': [(idx, list(self.polygons_of_interest[idx].exterior.coords.xy[1]))]})
+                
+            self.fire_last_observed_time = time_location_observed
+            
+        else:
+            self.fire_last_observed_time = -1        
+            
+        for poly in self.polygons_of_interest:
+            fire_area_now += poly.area*6370**2 
+        
+        # left sjoin on position in order to check if the points are in the waterbodies
+        # https://gis.stackexchange.com/questions/208546/check-if-a-point-falls-within-a-multipolygon-with-python
+        # Solution 4
+        points_world = gpd.GeoDataFrame({'notes': ['drone'], 'geometry': [
+            drone_circle
+            ]}, crs="EPSG:4326")
+
+        pointInWaterbodies = gpd.sjoin(points_world, self.waterbodies, how='left')
+        groupedInWaterbodies = pointInWaterbodies.groupby('index_right')
+        if(len(groupedInWaterbodies.groups) > 0):
+            if(self.water_start_time == -1):
+                self.water_start_time = time_location_observed
+            self.water_quantity = (time_location_observed - self.water_start_time)/1000 * 10  # 10 gallons/sec
+            self.water_quantity = self.water_limit if self.water_quantity > self.water_limit else self.water_quantity
+            self.stats_table_source.patch({'mission_stat': [(0, self.water_quantity)]})
+        else:
+            self.water_start_time = -1
+        
+        self.stats_table_source.patch({'score': [(0, 100.0 - (fire_area_now/float(self.starting_fire_area) * 100.0))]})
+        self.stats_table_source.patch({'mission_stat': [(0, self.water_quantity)]})
+    
+    def snr_intersections(self, drone_circle):        
+        object_indeces = self.check_drone_location_against_object_of_interest(drone_circle, self.polygons_of_interest)
+        for idx in object_indeces:
+            self.survivors_table_source.patch({'alpha': [(idx, 1)]});        
+            self.survivors_found = self.survivors_found + 1
+            
+        # TODO: this is the score
+        self.stats_table_source.patch({'mission_stat': [(0, self.survivors_found/float(len(self.map_data_dict["data_snr"]['x']))*100.0)]})
+        self.stats_table_source.patch({'score': [(0, self.survivors_found/float(len(self.map_data_dict["data_snr"]['x']))*100.0)]})
+        
+    
+    def check_drone_location_against_object_of_interest(self, drone_circle, objects):
+        # https://stackoverflow.com/questions/14697442/faster-way-of-polygon-intersection-with-shapely/14804366
+        idx = index.Index()
+        # Populate R-tree index with bounds of grid cells
+        for pos, cell in enumerate(objects):
+            # assuming cell is a shapely object
+            idx.insert(pos, cell.bounds)
+        
+        object_indeces = []
+        for pos in idx.intersection(drone_circle.bounds):
+            object_indeces.append(pos)
+        
+        return object_indeces
+    
+    def shrink_shapely_polygon(self, my_polygon, factor=0.10):
+        # https://stackoverflow.com/a/67205583
+        ''' returns the shapely polygon which is smaller or bigger by passed factor.
+            If swell = True , then it returns bigger polygon, else smaller '''
+
+        xs = list(my_polygon.exterior.coords.xy[0])
+        ys = list(my_polygon.exterior.coords.xy[1])
+        x_center = 0.5 * min(xs) + 0.5 * max(xs)
+        y_center = 0.5 * min(ys) + 0.5 * max(ys)
+        min_corner = Point(min(xs), min(ys))
+        # max_corner = Point(max(xs), max(ys))
+        center = Point(x_center, y_center)
+        shrink_distance = center.distance(min_corner)*factor
+        
+        my_polygon_shrunken = my_polygon.buffer(-shrink_distance) #shrink
+
+        # # visualize for debugging
+        # x, y = my_polygon.exterior.xy
+        # plt.plot(x,y)
+        # x, y = my_polygon_shrunken.exterior.xy
+        # plt.plot(x,y)
+        # # to net let the image be distorted along the axis
+        # plt.axis('equal')
+        # plt.show()    
+    
+        return my_polygon_shrunken
+            

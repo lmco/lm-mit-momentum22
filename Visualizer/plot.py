@@ -3,7 +3,7 @@
 #   Use of this software is subject to the BSD 3-Clause License. #
 ##################################################################
 
-from bokeh.models.tools import WheelZoomTool
+from bokeh.models.tools import CrosshairTool, WheelZoomTool
 from visualizationSharedDataStore import VisualizationSharedDataStore
 from visualizationSharedDataStore import Mode
 from data import MapType
@@ -49,6 +49,8 @@ class Plot(VisualizationSharedDataStore):
                               h_units='screen',
                               source=self.Viz.data.ownship_data_source)
         
+        self.crosshair_tool = CrosshairTool(description="Crosshair Tool")
+        self.figure.add_tools(self.crosshair_tool)
 
         if(self.Viz.mode == Mode.MAP_MAKER):
             self.wheel_zoom_tool = WheelZoomTool(maintain_focus=True)
@@ -75,3 +77,10 @@ class Plot(VisualizationSharedDataStore):
             elif(self.Viz.data.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION):
                 self.fires_renderer = self.figure.patches(
                     xs='xs', ys='ys', fill_color='fill_color', alpha='alpha', source=self.Viz.data.fires_table_source, line_width=0)
+                
+            ## This shows the radii of influence
+            # self.radii_debug_renderer = self.figure.patches(
+            #         xs='xs', ys='ys', fill_color='green', alpha=0.5, source=self.Viz.data.debug_radii_table_source, line_width=0)
+            
+            # self.drone_radii_debug_renderer = self.figure.patches(
+            #         xs='xs', ys='ys', fill_color='purple', alpha=0.5, source=self.Viz.data.debug_drone_table_source, line_width=0)

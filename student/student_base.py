@@ -16,7 +16,7 @@
 # TODO: Store PX4 Time is self.px4Time
 
 import sys
-sys.path.append('../Visualizer/')
+sys.path.append('Visualizer/')
 
 import time
 import grpc

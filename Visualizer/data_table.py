@@ -63,10 +63,11 @@ class VizDataTable(VisualizationSharedDataStore):
         self.stats_table = DataTable(source=self.Viz.data.stats_table_source,
                                     columns=[TableColumn(field="elapsed_dur", title="Elapsed Mission Duration"),
                                             TableColumn(field="remaining_dur", title="Remaining Mission Duration"),
-                                            TableColumn(field="mission_stat", title="Found survivors" if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else "% Fires extinguished"),
+                                            TableColumn(field="mission_stat", title="Mission Status"),
                                             TableColumn(field="lon", title="Drone Lon"),
                                             TableColumn(field="lat", title="Drone Lat"),
-                                            TableColumn(field="status", title="Drone Status")],
+                                            TableColumn(field="status", title="Drone Status"),
+                                            TableColumn(field="score", title="Found survivors" if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else "% Fires extinguished")],
                                     editable=False,
                                     sizing_mode="stretch_both")
 
@@ -94,7 +95,8 @@ class VizDataTable(VisualizationSharedDataStore):
         self.Viz.plot.figure.y_range.on_change(
             'start', self.updateMapBoundMinY)
         self.Viz.plot.figure.y_range.on_change('end', self.updateMapBoundMaxY)
-
+        
+        
     def updateMapBoundMinX(self, attr, old, new):
         self.Viz.data.bounds_table_source.patch({'minx': [(0, new)]})
         self.bounds_table.update()
