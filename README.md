@@ -1,6 +1,6 @@
 # Getting Started <!-- omit in toc -->
 
-This readme will walk you through getting your environment set up with the required software and running your first missions
+This readme will walk you through getting your environment set up with the required software and running your first missions.
 
 If you are viewing this file offline, the most up to date version of these instructions is located in the [project GitHub](https://github.com/lmco/lm-mit-momentum22).
 
@@ -18,7 +18,7 @@ git clone git@github.com:lmco/lm-mit-momentum22.git
 
 ![Clone Momentum](docs/cloning.gif)
 
-To copy updates from the GitHub repository, run `git pull` from the cloned directory in you commmand prompt
+To copy updates from the GitHub repository, run `git pull` from the cloned directory in you commmand prompt.
 
 **NOTES:**<!-- omit in toc -->
 
