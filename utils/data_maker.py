@@ -16,10 +16,10 @@ bounding_polygon = Polygon([(bbox[0],bbox[1]), (bbox[0],bbox[3]), (bbox[2], bbox
 
 # Import geojson (sources from Natural Earth and US Census)
 # https://geopandas.org/docs/user_guide/projections.html
-rivers = gpd.read_file('data/ne_10m_rivers_north_america.geojson', bbox=bbox, crs="EPSG:4326")
-lakes = gpd.read_file('data/ne_10m_lakes.geojson', bbox=bbox, crs="EPSG:4326")
-usa_states = gpd.read_file('data/cb_2018_us_state_20m.zip', bbox=bbox, crs="EPSG:4326")
-oceans = gpd.read_file('data/ne_10m_ocean_scale_rank.geojson', bbox=bbox, crs="EPSG:4326")
+rivers = gpd.read_file('../data/ne_10m_rivers_north_america.geojson', bbox=bbox, crs="EPSG:4326")
+lakes = gpd.read_file('../data/ne_10m_lakes.geojson', bbox=bbox, crs="EPSG:4326")
+usa_states = gpd.read_file('../data/cb_2018_us_state_20m.zip', bbox=bbox, crs="EPSG:4326")
+oceans = gpd.read_file('../data/ne_10m_ocean_scale_rank.geojson', bbox=bbox, crs="EPSG:4326")
 
 # Clean up data
 rivers = rivers[rivers.featurecla != 'Lake Centerline']
@@ -31,7 +31,7 @@ waterbodies = rivers.append(lakes)
 waterbodies = waterbodies.append(oceans)
 
 # Save the waterbodies to a file
-waterbodies.to_file("data/waterbodies.geojson", driver='GeoJSON')
+waterbodies.to_file("../data/waterbodies.geojson", driver='GeoJSON')
 
 # Save the water as an svg because Bokeh doesn't process polylines correctly
 # https://tex.stackexchange.com/questions/100190/how-can-i-remove-margins-when-integrating-matplotlib-plots-with-pgfplots
@@ -44,7 +44,7 @@ plt.xlim(bbox[0],bbox[2])
 plt.ylim(bbox[1],bbox[3])
 plt.subplots_adjust(top = 1, bottom = 0, right = 1, left = 0, 
             hspace = 0, wspace = 0)
-plt.savefig("Visualizer/static/waterbodies.svg", bbox_inches='tight', pad_inches=0.0)
+plt.savefig("../Visualizer/static/waterbodies.svg", bbox_inches='tight', pad_inches=0.0)
 
 # left sjoin on position in order to check if the points are in the waterbodies (here so that I don't forget how to do it)
 # https://gis.stackexchange.com/questions/208546/check-if-a-point-falls-within-a-multipolygon-with-python
