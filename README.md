@@ -185,6 +185,8 @@ This should look exactly the same as when [installing mavsdk](#5-install-mavsdk)
 pip3 install bokeh
 pip3 install geopandas
 pip3 install grpcio-tools
+pip3 install Shapely
+pip3 install Rtree
 ```
 
 This should look exactly the same as when [installing mavsdk](#5-install-mavsdk).
