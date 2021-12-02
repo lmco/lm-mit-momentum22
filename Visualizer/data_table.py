@@ -61,13 +61,13 @@ class VizDataTable(VisualizationSharedDataStore):
                                     editable=False,
                                     sizing_mode="stretch_both")
         self.stats_table = DataTable(source=self.Viz.data.stats_table_source,
-                                    columns=[TableColumn(field="elapsed_dur", title="Elapsed Mission Duration"),
-                                            TableColumn(field="remaining_dur", title="Remaining Mission Duration"),
-                                            TableColumn(field="mission_stat", title="Mission Status"),
+                                    columns=[TableColumn(field="elapsed_dur", title="Elapsed Mission Duration (sec)"),
+                                            TableColumn(field="remaining_dur", title="Remaining Mission Duration (sec)"),
+                                            TableColumn(field="mission_stat", title="% Survivors Found" if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else "Drone Water Quantity"),
                                             TableColumn(field="lon", title="Drone Lon"),
                                             TableColumn(field="lat", title="Drone Lat"),
                                             TableColumn(field="status", title="Drone Status"),
-                                            TableColumn(field="score", title="Found survivors" if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else "% Fires extinguished")],
+                                            TableColumn(field="score", title="Number of Survivors Found" if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else "% Fires extinguished")],
                                     editable=False,
                                     sizing_mode="stretch_both")
 

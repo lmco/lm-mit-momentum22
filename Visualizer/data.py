@@ -25,6 +25,7 @@ from shapely.ops import transform
 from rtree import index
 import pyproj
 from functools import partial
+import math
 
 
 class MapType(IntEnum):
@@ -311,7 +312,7 @@ class Data(VisualizationSharedDataStore):
                 self.fire_last_observed_time = time_location_observed
                 
             for idx in object_indeces:
-                polygon_reduction_factor = 0.075
+                polygon_reduction_factor = 0.05
                 if(self.water_quantity > ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0):
                     self.polygons_of_interest[idx] = self.shrink_shapely_polygon(self.polygons_of_interest[idx], polygon_reduction_factor * ((time_location_observed - self.fire_last_observed_time)/1000.0))
                 
@@ -360,14 +361,16 @@ class Data(VisualizationSharedDataStore):
     def snr_intersections(self, drone_circle):        
         object_indeces = self.check_drone_location_against_object_of_interest(drone_circle, self.polygons_of_interest)
         for idx in object_indeces:
+            if self.survivors_table_source.data['alpha'][idx] == 0:
+                self.survivors_found = self.survivors_found + 1
+                self.survivors_table_source.patch({'alpha': [(idx, 1)]});
             self.survivors_table_source.patch({'alpha': [(idx, 1)]});        
-            self.survivors_found = self.survivors_found + 1
+                self.survivors_table_source.patch({'alpha': [(idx, 1)]});
             
         # TODO: this is the score
         self.stats_table_source.patch({'mission_stat': [(0, self.survivors_found/float(len(self.map_data_dict["data_snr"]['x']))*100.0)]})
-        self.stats_table_source.patch({'score': [(0, self.survivors_found/float(len(self.map_data_dict["data_snr"]['x']))*100.0)]})
-        
-    
+        self.stats_table_source.patch({'score': [(0, self.survivors_found)]})
+
     def check_drone_location_against_object_of_interest(self, drone_circle, objects):
         # https://stackoverflow.com/questions/14697442/faster-way-of-polygon-intersection-with-shapely/14804366
         idx = index.Index()
