@@ -18,6 +18,8 @@ Utility to make and use MIT Momentum competition maps interactively.
 pip3 install bokeh
 pip3 install geopandas
 pip3 install grpcio-tools
+pip3 install Shapely
+pip3 install Rtree
 ```
 
 Refer to the [geopandas](https://geopandas.org/getting_started/install.html#installing-with-pip) website if you experience issues with missing dependencies for geopandas.

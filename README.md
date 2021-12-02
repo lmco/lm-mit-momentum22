@@ -4,30 +4,67 @@ This readme will walk you through getting your environment set up with the requi
 
 If you are viewing this file offline, the most up to date version of these instructions is located in the [project GitHub](https://github.com/lmco/lm-mit-momentum22).
 
-Quick reference on how to download this project to your computer (if you're just getting started, walk through the [steps after the table of contents](#1-install-ubuntu-2004-lts) first):
-
-1. [Generate a new SSH key on your computer](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-2. [Add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
-3. Create and navigate to the Momentum directory in your command prompt and clone the project
-
-``` sh
-mkdir -p ~/Momentum
-cd ~/Momentum
-git clone git@github.com:lmco/lm-mit-momentum22.git
-```
-
-![Clone Momentum](docs/cloning.gif)
-
-To copy updates from the GitHub repository, run `git pull` from the cloned directory in you commmand prompt.
-
 **NOTES:**<!-- omit in toc -->
 
 1. Unless otherwise specified, all instructions are to be entered into the terminal in your Ubuntu installation
 2. Commands that start with `sudo` will require your user password. Using sudo invokes superuser security privileges and is akin to running an application as an administrator in Windows.
 3. As we progress through the project, answers to common questions will be added to the [Q&A](https://github.com/lmco/lm-mit-momentum22/blob/main/QA.md).
 
+## Quick references
+
+Note: if you're just getting started, walk through the [steps after the table of contents](#1-install-ubuntu-2004-lts) first!
+
+### How to download this project to your computer
+
+See [Section 8](#8-clone-the-momentum22-project-folder-from-github) for more details.
+
+``` sh
+# Create a folder for the Momentum project in your home (~) directory
+mkdir -p ~/Momentum
+
+# Change directories to the folder we created
+cd ~/Momentum
+
+# Clone the project from GitHub
+git clone git@github.com:lmco/lm-mit-momentum22.git
+
+# Pull updates from remote
+cd ~/Momentum/lm-mit-momentum22
+git pull
+```
+
+### How to launch the simulation
+
+See [Section 9.1.](#91-launch-px4-visualizer-and-student-code-with-provided-maps-and-scripts) for details.
+
+``` sh
+# Get into the Momentum22 project folder
+cd ~/Momentum/lm-mit-momentum22
+
+# Launch PX4 with the jMavSim simulation target and set the starting location to Boston Logan Airport (KBOS)
+bash launch_px4_boston.bash
+```
+
+``` sh
+# Get into the Momentum22 project folder
+cd ~/Momentum/lm-mit-momentum22
+
+ # Launch Visualizer with the test map
+bokeh serve Visualizer --show --args -v boston_sar
+```
+
+``` sh
+# Get into the Momentum22 project folder
+cd ~/Momentum/lm-mit-momentum22
+
+# Launch Student code
+python3 student/student_SAR_example_boston.py 
+```
 ## Table of Contents <!-- omit in toc -->
 
+- [Quick references](#quick-references)
+	- [How to download this project to your computer](#how-to-download-this-project-to-your-computer)
+	- [How to launch the simulation](#how-to-launch-the-simulation)
 - [1. Install Ubuntu 20.04 LTS](#1-install-ubuntu-2004-lts)
 	- [1.1. Basic steps to install Ubuntu outside of a Virtual Machine](#11-basic-steps-to-install-ubuntu-outside-of-a-virtual-machine)
 	- [1.2. Basic steps to install Ubuntu inside of a Virtual Machine](#12-basic-steps-to-install-ubuntu-inside-of-a-virtual-machine)
@@ -195,6 +232,10 @@ Refer to the [geopandas](https://geopandas.org/getting_started/install.html#inst
 
 ## 8. Clone the Momentum22 Project folder from GitHub
 
+1. [Generate a new SSH key on your computer](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
+2. [Add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+3. Create and navigate to the Momentum directory in your command prompt and clone the project
+
 ``` sh
 # Get into the main project folder
 cd ~/Momentum
@@ -215,7 +256,7 @@ There are three steps to running the simulation
 2. Launching the Visualizer
 3. Running the student code
 
-The commands for this are below, with each run in a separate terminal window or tab (press ctrl+t to open a new tab in your terminal).
+The commands for this are below, with each run in a separate terminal window or tab. TIP: Press `ctrl+alt+t` to bring up a terminal and `ctrl+t` to open a new tab in your terminal.
 
 ``` sh
 # Get into the Momentum22 project folder
