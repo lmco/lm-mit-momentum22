@@ -111,6 +111,9 @@ class Visualizer(VisualizationSharedDataStore):
         if self.Viz.mode == Mode.VISUALIZATION:
             grpc_server.start(self.data.qLanding, self.data.qTakeoff, self.data.qLocation)
             
+            #https://discourse.bokeh.org/t/bokeh-application-title/1068/3
+            curdoc().title = "Momentum 22 Visualizer"
+            
             curdoc().add_periodic_callback(self.update, 10)  # period in ms            
 
 
