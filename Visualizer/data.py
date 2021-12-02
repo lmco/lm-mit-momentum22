@@ -88,7 +88,7 @@ class Data(VisualizationSharedDataStore):
         
         self.waterbodies = gpd.read_file('data/waterbodies.geojson', bbox=self.bbox, crs="EPSG:4326")
         
-        self.radius_of_influence = 50  # in m
+        self.radius_of_influence = 25 if self.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else 1 # in m
         
         self.polygons_of_interest = []
         if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION:
@@ -233,9 +233,9 @@ class Data(VisualizationSharedDataStore):
             if(not self.qLocation.empty()):
                 log.info(" --- Updating local location")
             loc = self.qLocation.get(block=False)
-            
-            self.stats_table_source.patch({'elapsed_dur': [(0, loc.px4Time/1000.0 - self.start_time)],
-                                           'remaining_dur': [(0, self.map_data_dict['mission_duration_min']*60 - loc.px4Time/1000.0 - self.start_time)],
+            elapsed_duration = loc.px4Time/1000.0 - self.start_time
+            self.stats_table_source.patch({'elapsed_dur': [(0, math.floor(elapsed_duration))],
+                                           'remaining_dur': [(0, math.floor(self.map_data_dict['mission_duration_min']*60.0 - elapsed_duration))],
                                            'lon': [(0, loc.longitude)],
                                            'lat': [(0, loc.latitude)],
                                            'status': [(0, "In Air")]})
@@ -409,3 +409,4 @@ class Data(VisualizationSharedDataStore):
         # plt.show()    
     
         return my_polygon_shrunken
+    

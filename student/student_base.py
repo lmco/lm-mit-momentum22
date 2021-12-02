@@ -73,6 +73,7 @@ class student_base:
 			time.sleep(0.1)
 					
 	def viz_send_updates(self):
+		self.px4Time = int(time.time()*1000.0)
 		self.viz_send_location(self.telemetry['latitude'], self.telemetry['longitude'])
 		self.viz_send_ground_state(self.telemetry['in_air'])
 		self.new_data_set = False
