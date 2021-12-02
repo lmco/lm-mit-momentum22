@@ -257,7 +257,7 @@ class Data(VisualizationSharedDataStore):
                     'lon': new_lon,
                     'lat': new_lat
                 }
-            log.info([self.drone_pos_data_source.data['lon'][-1], self.drone_pos_data_source.data['lat'][-1]])
+            # log.info([self.drone_pos_data_source.data['lon'][-1], self.drone_pos_data_source.data['lat'][-1]])
             
             drone_circle = self.point_to_circle((loc.longitude, loc.latitude), self.radius_of_influence)
             if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION:
@@ -332,7 +332,7 @@ class Data(VisualizationSharedDataStore):
             self.fire_last_observed_time = time_location_observed
             
         else:
-            self.fire_last_observed_time = -1        
+            self.fire_last_observed_time = -1
             
         for poly in self.polygons_of_interest:
             fire_area_now += poly.area*6370**2 
@@ -363,8 +363,6 @@ class Data(VisualizationSharedDataStore):
         for idx in object_indeces:
             if self.survivors_table_source.data['alpha'][idx] == 0:
                 self.survivors_found = self.survivors_found + 1
-                self.survivors_table_source.patch({'alpha': [(idx, 1)]});
-            self.survivors_table_source.patch({'alpha': [(idx, 1)]});        
                 self.survivors_table_source.patch({'alpha': [(idx, 1)]});
             
         # TODO: this is the score
@@ -411,4 +409,3 @@ class Data(VisualizationSharedDataStore):
         # plt.show()    
     
         return my_polygon_shrunken
-            
