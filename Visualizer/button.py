@@ -37,7 +37,7 @@ class VizButton(VisualizationSharedDataStore):
         self.save_button.on_click(self.Viz.data.save_map_record)
 
         self.cheat_button = Button(label="CHEAT (TOGGLE VISIBILITY ON THE ITEMS OF INTEREST)", button_type="success",
-                                   sizing_mode="stretch_width", disabled=self.Viz.mode == Mode.MAP_MAKER)
+                                   sizing_mode="stretch_width", disabled=self.Viz.mode == Mode.MAP_MAKER or self.Viz.data.map_data_dict['map_type'] == MapType.FIRE_SUPPRESSION)
         self.cheat_button.on_click(self.toggle_items_of_interest)
 
         self.cheat_status = VizVisibility.INVISIBLE
