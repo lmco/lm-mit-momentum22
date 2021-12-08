@@ -79,7 +79,7 @@ class Data(VisualizationSharedDataStore):
         else:
             log.error("Visualizer map name still None")
 
-        self.standard_window_lon = 0.015
+        self.standard_window_lat = 0.015
         # May choose to not draw these... this is just for reference
         usa_state_outlines = gpd.read_file(os.path.join(os.path.basename(os.path.dirname(inspect.getfile(
             lambda: None))), 'static/cb_2018_us_state_20m.zip'), bbox=self.area_bbox, crs="EPSG:4326")
@@ -234,7 +234,7 @@ class Data(VisualizationSharedDataStore):
         centroid = [(minx + maxx) / 2,
                     (miny + maxy) / 2]
         
-        shrink_ratio = (1.0/float(math.fabs(maxy - miny)/self.standard_window_lon))
+        shrink_ratio = (1.0/float(math.fabs(maxy - miny)/self.standard_window_lat))
         
         #https://stackoverflow.com/questions/31125511/scale-polygons-by-a-ratio-using-only-a-list-of-their-vertices
         new_min_x = shrink_ratio * (minx - centroid[0]) + centroid[0]
