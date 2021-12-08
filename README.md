@@ -60,6 +60,7 @@ cd ~/Momentum/lm-mit-momentum22
 # Launch Student code
 python3 student/student_SAR_example_boston.py 
 ```
+
 ## Table of Contents <!-- omit in toc -->
 
 - [Quick references](#quick-references)

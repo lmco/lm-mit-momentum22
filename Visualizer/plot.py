@@ -28,7 +28,7 @@ class Plot(VisualizationSharedDataStore):
                              y_range=(
                                  self.Viz.data.bbox[1], self.Viz.data.bbox[3]),
                              toolbar_location='below',
-                             tools="pan, box_zoom, reset" if self.Viz.mode == Mode.MAP_MAKER else "reset",
+                             tools="pan, box_zoom, reset, box_select" if self.Viz.mode == Mode.MAP_MAKER else "reset",
                              sizing_mode="scale_both")
         self.figure.xgrid.grid_line_color = None
         self.figure.ygrid.grid_line_color = None

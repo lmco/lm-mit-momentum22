@@ -7,6 +7,10 @@ Utility to make and use MIT Momentum competition maps interactively.
 1. Navigate your command line to the root folder of the project (this Visualizer folder should be a subfolder to the root)
 2. Run the visualizer in one of two modes
    1. Enter `bokeh serve Visualizer --show --args -m` on your commandline, press `Enter` for the MapMaker
+      - You can edit an existing map using `bokeh serve Visualizer --show --args -m <mapname>`, where `<mapname>` is a map stored in the maps directory, press `Enter` for the Visualizer
+      - To bulk delete object of interest, use the box select tool to select multiple glyphs, select the tool that makes the glyphs you want to delete, press `Backspace`
+      - To modify the existing map, click `Save As`
+      - To save the map as a new map, give the map a unique name and click `Save As`
    2. Enter `bokeh serve Visualizer --show --args -v <mapname>` on your commandline, where `<mapname>` is a map stored in the maps directory, press `Enter` for the Visualizer
 3. A web browser tab should open with the Visualizer utility at http://localhost:5006/Visualizer
 

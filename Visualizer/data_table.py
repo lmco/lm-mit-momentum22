@@ -89,12 +89,10 @@ class VizDataTable(VisualizationSharedDataStore):
         self.stats_table_description = Div(text="""Simulation Statistics""")
 
         # Register callbacks for table updates
-        self.Viz.plot.figure.x_range.on_change(
-            'start', self.updateMapBoundMinX)
-        self.Viz.plot.figure.x_range.on_change('end', self.updateMapBoundMaxX)
-        self.Viz.plot.figure.y_range.on_change(
-            'start', self.updateMapBoundMinY)
-        self.Viz.plot.figure.y_range.on_change('end', self.updateMapBoundMaxY)
+        self.Viz.plot.figure.x_range.on_change('start', self.updateMapBoundMinX)
+        self.Viz.plot.figure.x_range.on_change('end',   self.updateMapBoundMaxX)
+        self.Viz.plot.figure.y_range.on_change('start', self.updateMapBoundMinY)
+        self.Viz.plot.figure.y_range.on_change('end',   self.updateMapBoundMaxY)
         
         
     def updateMapBoundMinX(self, attr, old, new):

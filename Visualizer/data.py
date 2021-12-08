@@ -52,15 +52,15 @@ class Data(VisualizationSharedDataStore):
         
         # Create bounding box for the scope of mapping (New England)
         self.area_bbox = (-80.41417236584573, 40.258338053379745, -69.06461890186635, 44.5188750075358)
-        if(self.Viz.mode == Mode.MAP_MAKER):
+        if(self.Viz.mode == Mode.MAP_MAKER and self.Viz.map_name is None):
             self.bbox = self.area_bbox
             self.map_data_dict = {
                 "map_name": "sample_name",
                 "map_type": MapType.FIRE_SUPPRESSION,
-                "bounds": {'minx': self.bbox[0],
-                           'miny': self.bbox[1],
-                           'maxx': self.bbox[2],
-                           'maxy': self.bbox[3]},
+                "bounds": {'minx': self.area_bbox[0],
+                           'miny': self.area_bbox[1],
+                           'maxx': self.area_bbox[2],
+                           'maxy': self.area_bbox[3]},
                 "data_fs": {'xs': [],
                             'ys': [], },
                 "data_snr": {'x': [],
@@ -70,6 +70,7 @@ class Data(VisualizationSharedDataStore):
                 "mission_duration_min": 6,
             }
         elif(self.Viz.map_name is not None):
+            log.info(" --- LOADING MAP: " + self.Viz.map_name)
             self.map_data_dict = self.load_map_record(self.Viz.map_name)
             self.bbox = (self.Viz.data.map_data_dict['bounds']['minx'][0],
                          self.Viz.data.map_data_dict['bounds']['miny'][0],
@@ -78,15 +79,16 @@ class Data(VisualizationSharedDataStore):
         else:
             log.error("Visualizer map name still None")
 
+        self.standard_window_lon = 0.015
         # May choose to not draw these... this is just for reference
         usa_state_outlines = gpd.read_file(os.path.join(os.path.basename(os.path.dirname(inspect.getfile(
-            lambda: None))), 'static/cb_2018_us_state_20m.zip'), bbox=self.bbox, crs="EPSG:4326")
+            lambda: None))), 'static/cb_2018_us_state_20m.zip'), bbox=self.area_bbox, crs="EPSG:4326")
 
         # Convert data to geojson for bokeh
         self.usa_states_outlines_geojson = GeoJSONDataSource(
             geojson=usa_state_outlines.to_json())
         
-        self.waterbodies = gpd.read_file('data/waterbodies.geojson', bbox=self.bbox, crs="EPSG:4326")
+        self.waterbodies = gpd.read_file('data/waterbodies.geojson', bbox=self.area_bbox, crs="EPSG:4326")
         
         self.radius_of_influence = 25 if self.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else 1 # in m
         
@@ -153,19 +155,27 @@ class Data(VisualizationSharedDataStore):
         
 
         # Table data sources
-        if(self.Viz.mode == Mode.MAP_MAKER):
+        if(self.Viz.mode == Mode.MAP_MAKER and self.Viz.map_name is None):
             self.survivors_table_source = ColumnDataSource({
                 'x': [self.Viz.data.map_data_dict['data_snr']['x']],
                 'y': [self.Viz.data.map_data_dict['data_snr']['y']]})
             self.fires_table_source = ColumnDataSource({
                 'xs': [self.Viz.data.map_data_dict['data_fs']['xs']],
                 'ys': [self.Viz.data.map_data_dict['data_fs']['ys']]})
+        elif(self.Viz.mode == Mode.MAP_MAKER and self.Viz.map_name is not None):
+            self.survivors_table_source = ColumnDataSource({
+                'x': self.Viz.data.map_data_dict['data_snr']['x'],
+                'y': self.Viz.data.map_data_dict['data_snr']['y']})
+            self.fires_table_source = ColumnDataSource({
+                'xs': self.Viz.data.map_data_dict['data_fs']['xs'],
+                'ys': self.Viz.data.map_data_dict['data_fs']['ys']})
         else:
             self.survivors_table_source = ColumnDataSource({
                 'x': self.Viz.data.map_data_dict['data_snr']['x'],
                 'y': self.Viz.data.map_data_dict['data_snr']['y'],
                 'color': ['orange']*len(self.Viz.data.map_data_dict['data_snr']['y']),
                 'alpha': [0.0]*len(self.Viz.data.map_data_dict['data_snr']['y'])} if self.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else {})
+            log.info(self.survivors_table_source.data)
             self.fires_table_source = ColumnDataSource({
                 'xs': self.Viz.data.map_data_dict['data_fs']['xs'],
                 'ys': self.Viz.data.map_data_dict['data_fs']['ys'],
@@ -183,18 +193,26 @@ class Data(VisualizationSharedDataStore):
         
         
 
-    def save_map_record(self) -> None:
+    def save_map_record_as(self) -> None:
         try:
             log.info(" ---- Saving map")
             Path("maps").mkdir(parents=True, exist_ok=True)
             with open("maps/" + self.map_data_dict['map_name'] + ".json", 'w+') as outfile:
                 self.map_data_dict["generated_on"] = datetime.now().strftime(
                     "%d/%m/%Y_%H:%M:%S")
+                self.Viz.data_table.bounds_table.source.data = {'minx': self.flatten(self.bounds_table_source.data['minx']),
+                                                                'miny': self.flatten(self.bounds_table_source.data['miny']),
+                                                                'maxx': self.flatten(self.bounds_table_source.data['maxx']),
+                                                                'maxy': self.flatten(self.bounds_table_source.data['maxy'])}
                 self.map_data_dict["bounds"] = self.Viz.data_table.bounds_table.source.data
-                self.map_data_dict["data_fs"]['xs'] = self.Viz.data_table.fires_table.source.data['xs'][1:]
-                self.map_data_dict["data_fs"]['ys'] = self.Viz.data_table.fires_table.source.data['ys'][1:]
-                self.map_data_dict["data_snr"]['x'] = self.Viz.data_table.survivors_table.source.data['x'][1:]
-                self.map_data_dict["data_snr"]['y'] = self.Viz.data_table.survivors_table.source.data['y'][1:]
+                if(self.Viz.map_name is None):
+                    self.map_data_dict["data_fs"]['xs'] = self.Viz.data_table.fires_table.source.data['xs'][1:]
+                    self.map_data_dict["data_fs"]['ys'] = self.Viz.data_table.fires_table.source.data['ys'][1:]
+                else:
+                    self.map_data_dict["data_fs"]['xs'] = self.Viz.data_table.fires_table.source.data['xs']
+                    self.map_data_dict["data_fs"]['ys'] = self.Viz.data_table.fires_table.source.data['ys']
+                self.map_data_dict["data_snr"]['x'] = self.flatten(self.Viz.data_table.survivors_table.source.data['x'])
+                self.map_data_dict["data_snr"]['y'] = self.flatten(self.Viz.data_table.survivors_table.source.data['y'])
 
                 json.dump(self.map_data_dict, outfile,
                           indent=4, sort_keys=True)
@@ -206,6 +224,35 @@ class Data(VisualizationSharedDataStore):
         with open("maps/" + map_name + ".json") as f:
             map_data = json.load(f)
             return map_data
+    
+    def bind_bbox(self) -> None:
+        minx = self.flatten(self.bounds_table_source.data['minx'])[0]
+        miny = self.flatten(self.bounds_table_source.data['miny'])[0]
+        maxx = self.flatten(self.bounds_table_source.data['maxx'])[0]
+        maxy = self.flatten(self.bounds_table_source.data['maxy'])[0]
+        
+        centroid = [(minx + maxx) / 2,
+                    (miny + maxy) / 2]
+        
+        shrink_ratio = (1.0/float(math.fabs(maxy - miny)/self.standard_window_lon))
+        
+        #https://stackoverflow.com/questions/31125511/scale-polygons-by-a-ratio-using-only-a-list-of-their-vertices
+        new_min_x = shrink_ratio * (minx - centroid[0]) + centroid[0]
+        new_max_x = shrink_ratio * (maxx - centroid[0]) + centroid[0]
+        new_min_y = shrink_ratio * (miny - centroid[1]) + centroid[1]
+        new_max_y = shrink_ratio * (maxy - centroid[1]) + centroid[1]
+        
+        self.bounds_table_source.patch({'minx': [(0, new_min_x)],
+                                        'maxx': [(0, new_max_x)],
+                                        'miny': [(0, new_min_y)],
+                                        'maxy': [(0, new_max_y)]})
+        self.Viz.data_table.bounds_table.update()
+        
+        #https://stackoverflow.com/questions/42493049/bokeh-python-how-to-update-range-of-extra-axis
+        self.plot.figure.x_range.start = new_min_x
+        self.plot.figure.x_range.end = new_max_x
+        self.plot.figure.y_range.start = new_min_y
+        self.plot.figure.y_range.end = new_max_y
 
     def check_landing_status(self):
         try:
@@ -383,7 +430,7 @@ class Data(VisualizationSharedDataStore):
         
         return object_indeces
     
-    def shrink_shapely_polygon(self, my_polygon, factor=0.10):
+    def shrink_shapely_polygon(self, my_polygon, factor=0.10) -> Polygon:
         # https://stackoverflow.com/a/67205583
         ''' returns the shapely polygon which is smaller or bigger by passed factor.
             If swell = True , then it returns bigger polygon, else smaller '''
