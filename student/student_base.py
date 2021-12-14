@@ -161,7 +161,7 @@ class student_base:
 		self.student_run(self.telemetry, self.commands)
 		self.mav_thread_stop()
 		
-	def student_run(self, telemetry):
+	def student_run(self, telemetry, commands):
 		print("Override this method in your class!")
 		
 	############# Student Commands ###############
