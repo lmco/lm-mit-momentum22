@@ -49,7 +49,7 @@ class Plot(VisualizationSharedDataStore):
                              y_range=(self.Viz.data.bbox[1], 
                                       self.Viz.data.bbox[3]),
                              toolbar_location='below',
-                             tools="pan, box_zoom, reset, box_select" 
+                             tools="pan, reset, box_select" 
                                     if self.Viz.mode == Mode.MAP_MAKER 
                                     else "reset",
                              sizing_mode="scale_both")
@@ -101,13 +101,13 @@ class Plot(VisualizationSharedDataStore):
 
             # Set up the tool for drawing survivors
             self.survivor_tool = PointDrawTool(renderers=[self.survivor_renderer],
-                                               description="Survivor draw tool (select, click once on map to survivors)")
+                                               description="Survivor draw tool (select, click once on map to draw a survivor)")
             self.figure.add_tools(self.survivor_tool)
             self.figure.toolbar.active_tap = self.survivor_tool
 
             # Set up the tool for drawing fires
             self.fire_tool = PolyDrawTool(renderers=[self.fires_renderer],
-                                          description="Fire draw tool (select, double click on map to start, click once on map to add vertices, double click on map to end)")
+                                          description="Fire draw tool (select, double click on map to start, click once on map to add vertices, double click on map to end with final vertex)")
             self.figure.add_tools(self.fire_tool)
         else: # Visualizer mode
             # Set up for drawing the ownship track
