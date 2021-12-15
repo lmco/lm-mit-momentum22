@@ -285,6 +285,8 @@ python3 student/student_SAR_example_boston.py
 
 ![Starting simulation](docs/start_sim.gif)
 
+If the student code fails with `mavsdk.action.ActionError: COMMAND_DENIED: 'Command Denied'`, enter `commander disarm -f` in your PX4 window and restart the student code. You may need to restart the visualizer for accurate scoring.
+
 ### 9.2. OPTIONAL: Set home position and launch PX4 Manually
 
 Setting the home position will ensure that the Visualizer, PX4, and the Python mission are on the same page about where the drone is supposed to be. The provided launch scripts in the lm-mit-momentum22 project will automatically launch PX4 with the correct home position for the corresponding maps. These instructions are for manually setting your own home position.
