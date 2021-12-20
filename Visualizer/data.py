@@ -204,7 +204,7 @@ class Data(VisualizationSharedDataStore):
 
         # This is the difference between miny and maxy that the bound button will match to.
         # If bound maps are still too big, decrease this value.
-        self.standard_window_lat = 0.015
+        self.standard_window_lat = 0.0108
         
         # # This is just for reference - not drawing this right now
         # usa_state_outlines = gpd.read_file(os.path.join(os.path.basename(os.path.dirname(inspect.getfile(
