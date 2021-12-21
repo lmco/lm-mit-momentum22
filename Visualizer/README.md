@@ -16,7 +16,7 @@ Utility to make and use MIT Momentum competition maps interactively.
 
 Check out the [User's Guide](https://github.com/lmco/lm-mit-momentum22/blob/main/Visualizer/MIT%20Momentum%20Visualization%20User's%20Guide.pptx) for a more thorough walkthrough. It contains a detailed breakdown of features and gifs of those features in action (you may have to be in presentation mode for the gifs to play depending on your settings).
 
-**NOTE:** We strongly recommend using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browser are untested.
+>**NOTE:** We strongly recommend using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browser are untested.
 
 ## Dependencies
 

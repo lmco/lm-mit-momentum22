@@ -39,10 +39,10 @@
             42.358373199729016
         ]
     },
-    "generated_on": "21/12/2021_15:03:21",
-    "map_name": "boston_sar_zoomed",
+    "generated_on": "21/12/2021_19:39:37",
+    "map_name": "boston_sar",
     "map_type": 1,
-    "mission_duration_min": 6,
+    "mission_duration_min": 10,
     "wind": {
         "dir_deg": 0,
         "spd_kts": 0
