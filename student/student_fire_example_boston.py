@@ -55,8 +55,8 @@ class my_flight_controller(student_base):
 		
 		# Get Water
 		print("Get to water")
-		goalLat = 42.3635 # water
-		goalLon = -70.997
+		goalLat = 42.3608 # water
+		goalLon = -70.9904
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
@@ -66,10 +66,13 @@ class my_flight_controller(student_base):
 			time.sleep(10)
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 
+
+		print("Picking up water")
+		time.sleep(10)
 		# fire
-		print("Goto fire")
-		goalLat = 42.363 # fire
-		goalLon = -71
+		print("Go to fire")
+		goalLat = 42.36045 # fire
+		goalLon = -70.99165
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
@@ -80,6 +83,10 @@ class my_flight_controller(student_base):
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 			
 		# Home
+
+		print("Putting out fire")
+		time.sleep(10)
+
 		print("Returning to Base")
 		goalLat = homeLat # Home
 		goalLon = homeLon

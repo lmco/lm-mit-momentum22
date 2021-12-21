@@ -55,8 +55,8 @@ class my_flight_controller(student_base):
 		
 		# First Survivor
 		print("Goto first survivor")
-		goalLat = 42.35754262671063 # first survivor
-		goalLon = -70.99401256062542
+		goalLat = 42.358283498732334 # first survivor
+		goalLon = -70.98547492971431
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
@@ -68,8 +68,8 @@ class my_flight_controller(student_base):
 
 		# Second survivor
 		print("Goto second survivor")
-		goalLat = 42.362233880225155 # second survivor
-		goalLon = -70.98969351990434
+		goalLat = 42.358373199729016 # second survivor
+		goalLon = -70.99167913333119
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])

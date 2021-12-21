@@ -5,7 +5,7 @@
 
 cd ~/Momentum/PX4/PX4-Autopilot/
 export PX4_HOME_LAT=42.36
-export PX4_HOME_LON=-71
+export PX4_HOME_LON=-70.99
 export PX4_HOME_ALT=10
 HEADLESS=1 make px4_sitl jmavsim
 sleep 5

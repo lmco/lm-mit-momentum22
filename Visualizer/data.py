@@ -204,7 +204,7 @@ class Data(VisualizationSharedDataStore):
 
         # This is the difference between miny and maxy that the bound button will match to.
         # If bound maps are still too big, decrease this value.
-        self.standard_window_lat = 0.0108
+        self.standard_window_lat = 0.003
         
         # # This is just for reference - not drawing this right now
         # usa_state_outlines = gpd.read_file(os.path.join(os.path.basename(os.path.dirname(inspect.getfile(
@@ -220,7 +220,7 @@ class Data(VisualizationSharedDataStore):
         # This is how close in meters the drone needs to be in order to collect water/extinguish fire/see survivor
         self.radius_of_influence = (25 
                                     if self.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE 
-                                    else 1) # in m
+                                    else 5) # in m
         
         # Prepopulate the polygons of interest and just modify this list as the mission progresses
         self.polygons_of_interest = []
