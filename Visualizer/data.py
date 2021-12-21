@@ -189,7 +189,7 @@ class Data(VisualizationSharedDataStore):
                              'y': []},
                 "wind": {'spd_kts': 0,
                          'dir_deg': 0},
-                "mission_duration_min": 6,
+                "mission_duration_min": 10,
             }
         elif(self.Viz.map_name is not None):
             # We're given a map name, so just load that.
