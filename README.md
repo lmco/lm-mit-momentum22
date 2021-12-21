@@ -1,18 +1,18 @@
-# Getting Started <!-- omit in toc -->
+# Getting started <!-- omit in toc -->
 
 This readme will walk you through getting your environment set up with the required software and running your first missions.
 
 If you are viewing this file offline, the most up to date version of these instructions is located in the [project GitHub](https://github.com/lmco/lm-mit-momentum22).
 
-**NOTES:**<!-- omit in toc -->
-
-1. Unless otherwise specified, all instructions are to be entered into the terminal in your Ubuntu installation
-2. Commands that start with `sudo` will require your user password. Using sudo invokes superuser security privileges and is akin to running an application as an administrator in Windows.
-3. As we progress through the project, answers to common questions will be added to the [Q&A](https://github.com/lmco/lm-mit-momentum22/blob/main/QA.md).
+>**NOTES:**<!-- omit in toc -->
+>
+>1. Unless otherwise specified, all instructions are to be entered into the terminal in your Ubuntu installation
+>2. Commands that start with `sudo` will require your user password. Using sudo invokes superuser security privileges and is akin to running an application as an administrator in Windows.
+>3. As we progress through the project, answers to common questions will be added to the [Q&A](https://github.com/lmco/lm-mit-momentum22/blob/main/QA.md).
 
 ## Quick references
 
-Note: if you're just getting started, walk through the [steps after the table of contents](#1-install-ubuntu-2004-lts) first!
+>**Note:** If you're just getting started, walk through the [steps after the table of contents](#1-install-ubuntu-2004-lts) first!
 
 ### How to download this project to your computer
 
@@ -75,16 +75,13 @@ python3 student/student_SAR_example_boston.py
 	- [4.1. Clone and Build PX4](#41-clone-and-build-px4)
 - [5. Install MAVSDK](#5-install-mavsdk)
 - [6. Install navpy and numpy](#6-install-navpy-and-numpy)
-- [7. Install Dependencies for Visualizer](#7-install-dependencies-for-visualizer)
-- [8. Clone the Momentum22 Project folder from GitHub](#8-clone-the-momentum22-project-folder-from-github)
+- [7. Install dependencies for Visualizer](#7-install-dependencies-for-visualizer)
+- [8. Clone the Momentum22 project folder from GitHub](#8-clone-the-momentum22-project-folder-from-github)
 - [9. Launch simulation and run mission](#9-launch-simulation-and-run-mission)
 	- [9.1. Launch PX4, Visualizer, and Student Code with provided maps and scripts](#91-launch-px4-visualizer-and-student-code-with-provided-maps-and-scripts)
 	- [9.2. OPTIONAL: Set home position and launch PX4 Manually](#92-optional-set-home-position-and-launch-px4-manually)
 		- [9.2.1 OPTIONAL: Set PX4 firmware parameters manually](#921-optional-set-px4-firmware-parameters-manually)
 	- [9.3. OPTIONAL: Create and load your own Maps in the Visualizer](#93-optional-create-and-load-your-own-maps-in-the-visualizer)
-	- [9.4. OPTIONAL Install QGroundControl](#94-optional-install-qgroundcontrol)
-		- [9.4.1. Fix problem where PX4 can't connect to QGroundControl](#941-fix-problem-where-px4-cant-connect-to-qgroundcontrol)
-		- [9.4.2. Launch QGroundControl](#942-launch-qgroundcontrol)
 
 <!-- TOC and section numbers automatically generated, do not manually edit -->
 
@@ -162,7 +159,7 @@ PX4 is industry-standard autopilot software for hobbyist drone applications. It 
 
 ### 4.1. Clone and Build PX4
 
-Summary of [PX4 simulation with Gazebo](https://dev.px4.io/master/en/simulation/gazebo.html):
+Summary of [PX4 simulation with jMavSim](https://docs.px4.io/master/en/simulation/jmavsim.html):
 
 ``` sh
 # Return to home project directory
@@ -182,16 +179,11 @@ git clone https://github.com/PX4/PX4-Autopilot.git --recursive
 # Get into the PX4 project directory
 cd PX4-Autopilot
 
-# Build the project with default drone target and gazebo simulation target
+# Build the project with default drone target and jMavSim simulation target
 HEADLESS=1 make px4_sitl jmavsim
 ```
 
 ![Installing PX4](docs/px4_build.gif)
-
-Take note:
-
-- IP-address on the line that looks like `[Msg] Publicized address: 192.168.0.10` will be useful if PX4 can't connect to QGroundControl when running Gazebo.
-- IP-address on the line that looks like `[Msg] Connected to gazebo master @ http://127.0.0.1:11345` will be useful when setting up py3gazebo.
 
 ## 5. Install MAVSDK
 
@@ -208,7 +200,7 @@ pip3 install mavsdk
 
 ## 6. Install navpy and numpy
 
-Navpy provides coordinate system conversion functions
+`navpy` provides coordinate system conversion functions and `numpy` provides computation utilities.
 
 ``` sh
 pip3 install numpy
@@ -217,7 +209,7 @@ pip3 install navpy
 
 This should look exactly the same as when [installing mavsdk](#5-install-mavsdk).
 
-## 7. Install Dependencies for Visualizer
+## 7. Install dependencies for Visualizer
 
 ``` sh
 pip3 install bokeh
@@ -231,7 +223,7 @@ This should look exactly the same as when [installing mavsdk](#5-install-mavsdk)
 
 Refer to the [geopandas](https://geopandas.org/getting_started/install.html#installing-with-pip) website if you experience issues with missing dependencies for geopandas.
 
-## 8. Clone the Momentum22 Project folder from GitHub
+## 8. Clone the Momentum22 project folder from GitHub
 
 1. [Generate a new SSH key on your computer](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
 2. [Add the SSH key to your GitHub account](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
@@ -283,9 +275,9 @@ cd ~/Momentum/lm-mit-momentum22
 python3 student/student_SAR_example_boston.py 
 ```
 
-![Starting simulation](docs/start_sim.gif)
+>If the student code fails with `mavsdk.action.ActionError: COMMAND_DENIED: 'Command Denied'`, enter `commander disarm -f` in your PX4 window and restart the student code. You may need to restart the visualizer for accurate scoring.
 
-If the student code fails with `mavsdk.action.ActionError: COMMAND_DENIED: 'Command Denied'`, enter `commander disarm -f` in your PX4 window and restart the student code. You may need to restart the visualizer for accurate scoring.
+![Starting simulation](docs/start_sim.gif)
 
 ### 9.2. OPTIONAL: Set home position and launch PX4 Manually
 
@@ -346,73 +338,4 @@ param reset_all
    2. Enter `bokeh serve Visualizer --show --args -v <mapname>` on your commandline, where `<mapname>` is a map stored in the maps directory, press `Enter` for the Visualizer
 3. A web browser tab should open with the Visualizer utility at http://localhost:5006/Visualizer
 
-**NOTE:** We advise using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browsers are untested.
-
-### 9.4. OPTIONAL Install QGroundControl
-
-QGroundControl can be seen as a companion application to PX4. It provides a GUI interface for some of the most commonly used parameters in PX4. It also provides a contextualized view of the running mission. This software is not necessary to complete the project, but it may be useful for debugging.
-
-Summary of [QGRoundControl installation instructions](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html):
-
-``` sh
-# Give yourself permissions to use the serial port
-sudo usermod -a -G dialout $USER
-
-# Remove modemmanager
-sudo apt-get remove modemmanager -y
-
-# Install dependencies
-sudo apt install gstreamer1.0-plugins-bad gstreamer1.0-libav gstreamer1.0-gl -y
-
-#
-# Log out and log back in.
-#
-
-# Return to home
-cd ~/Momentum
-
-# Download QGroundControl app image
-wget https://s3-us-west-2.amazonaws.com/qgroundcontrol/latest/QGroundControl.AppImage
-
-# Add execution permissions to the downloaded file
-chmod +x ./QGroundControl.AppImage
-
-# Launch app
-./QGroundControl.AppImage # (or double-click)
-```
-
-#### 9.4.1. Fix problem where PX4 can't connect to QGroundControl
-
-Summary of [forum post solving this issue](https://discuss.px4.io/t/how-to-make-qgcontrol-connect-to-gazebo-simulation-instance-in-another-host-in-same-lan/9941):
-
-``` sh
-# Get into the PX4 project directory
-cd ~/Momentum/PX4/PX4-Autopilot
-
-# Edit the startup script
-gedit ROMFS/px4fmu_common/init.d-posix/rcS 
-```
-
-Add the IP address you see in the console when you run `make px4_sitl gazebo` to the line `mavlink start -x -u $udp_gcs_port_local -r 4000000` using the syntax
-
-``` sh
--t 192.168.x.y
-```
-
-e.g.
-
-``` sh
-mavlink start -x -u $udp_gcs_port_local -r 4000000 -t 192.168.0.10
-```
-
-#### 9.4.2. Launch QGroundControl
-
-Summary of [QGRoundControl installation instructions](https://docs.qgroundcontrol.com/master/en/getting_started/download_and_install.html):
-
-``` sh
-# Get into the project home directory
-cd ~/Momentum/
-
-# Launch QGroundControl
-./QGroundControl.AppImage # (or double-click)
-```
+>**NOTE:** We advise using Chrome with the Visualizer. Graphical anomalies were observed when using the zoom feature in Firefox. Other browsers are untested.
