@@ -87,15 +87,15 @@ class Plot(VisualizationSharedDataStore):
             self.survivor_renderer = self.figure.scatter(x='x', 
                                                          y='y', 
                                                          color='orange', 
-                                                         alpha=0.4, 
+                                                         alpha=1.0, 
                                                          source=self.Viz.data.survivors_table_source, 
-                                                         size=5)
+                                                         size=10)
             # Set up for plotting fires
             # The plot will update automatically as data is manipulated in the table source
             self.fires_renderer = self.figure.patches(xs='xs', 
                                                       ys='ys', 
                                                       fill_color='red', 
-                                                      alpha=0.4, 
+                                                      alpha=1.0, 
                                                       source=self.Viz.data.fires_table_source, 
                                                       line_width=0)
 
@@ -128,7 +128,7 @@ class Plot(VisualizationSharedDataStore):
                                                              color='color', 
                                                              alpha='alpha', 
                                                              source=self.Viz.data.survivors_table_source, 
-                                                             size=5)
+                                                             size=10)
             elif(self.Viz.data.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION):
                 # Set up for plotting fires
                 # The plot will update automatically as data is manipulated in the table source
