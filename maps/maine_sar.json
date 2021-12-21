@@ -46,7 +46,7 @@
     "generated_on": "24/11/2021_01:08:52",
     "map_name": "maine_sar",
     "map_type": 1,
-    "mission_duration_min": 6,
+    "mission_duration_min": 10,
     "wind": {
         "dir_deg": 0,
         "spd_kts": 0

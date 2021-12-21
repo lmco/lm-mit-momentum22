@@ -48,7 +48,7 @@
     "generated_on": "24/11/2021_00:42:26",
     "map_name": "island_sar",
     "map_type": 1,
-    "mission_duration_min": 6,
+    "mission_duration_min": 10,
     "wind": {
         "dir_deg": 0,
         "spd_kts": 0

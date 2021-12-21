@@ -72,7 +72,7 @@
     "generated_on": "24/11/2021_01:16:43",
     "map_name": "maine_fire",
     "map_type": 0,
-    "mission_duration_min": 6,
+    "mission_duration_min": 10,
     "wind": {
         "dir_deg": 0,
         "spd_kts": 0
