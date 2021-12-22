@@ -109,16 +109,7 @@ class Plot(VisualizationSharedDataStore):
             self.fire_tool = PolyDrawTool(renderers=[self.fires_renderer],
                                           description="Fire draw tool (select, double click on map to start, click once on map to add vertices, double click on map to end with final vertex)")
             self.figure.add_tools(self.fire_tool)
-        else: # Visualizer mode
-            # Set up for drawing the ownship track
-            # The plot will update automatically as data is manipulated in the table source
-            self.figure.line(x='lon', 
-                             y='lat', 
-                             color='olivedrab', 
-                             alpha=1, 
-                             source=self.Viz.data.drone_pos_data_source, 
-                             line_width=5)
-        
+        else: # Visualizer mode        
             # Set up the correct renderer type for our mode
             # The plot will update automatically as data is manipulated in the table source
             if(self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE):
@@ -152,3 +143,24 @@ class Plot(VisualizationSharedDataStore):
             #                                                       alpha=0.5, 
             #                                                       source=self.Viz.data.debug_drone_table_source, 
             #                                                       line_width=0)
+            
+            # Set up for drawing the ownship track
+            # The plot will update automatically as data is manipulated in the table source
+            self.figure.line(x='lon', 
+                             y='lat', 
+                             color='olivedrab', 
+                             alpha=1, 
+                             source=self.Viz.data.drone_pos_data_source, 
+                             line_width=5)
+        
+        # Show the ownship symbol on the plot
+        self.figure.image_url(url='url',
+                              x='lon',
+                              y='lat',
+                              anchor='center',
+                              w='w',
+                              w_units='screen',
+                              h='h',
+                              h_units='screen',
+                              source=self.Viz.data.ownship_data_source)
+        
