@@ -82,7 +82,7 @@ class VizButton(VisualizationSharedDataStore):
         self.save_as_button = Button(label="SAVE MAP AS", 
                                      button_type="success",
                                      sizing_mode="stretch_width", 
-                                     disabled=self.Viz.mode == Mode.VISUALIZATION)
+                                     disabled=self.Viz.mode == Mode.VISUALIZATION or self.Viz.data.disable_save)
         self.save_as_button.on_click(self.Viz.data.save_map_record_as)
         
         # Make a bind button for the map and make it call the bind map method on click

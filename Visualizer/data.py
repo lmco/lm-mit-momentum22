@@ -22,13 +22,10 @@ import math
 
 # Helpers
 from enum import IntEnum
-from pathlib import Path
-from datetime import datetime
 import os
 import inspect
-import json
-import traceback
 from typing import Dict
+from map_reader import map_reader
 
 # Multiprocessing for grpc data
 from multiprocessing import Queue
@@ -191,6 +188,8 @@ class Data(VisualizationSharedDataStore):
                          'dir_deg': 0},
                 "mission_duration_min": 10,
             }
+            
+            map_reader.load_map_record(self, log, "")
         elif(self.Viz.map_name is not None):
             # We're given a map name, so just load that.
             log.info(" --- LOADING MAP: " + self.Viz.map_name)
@@ -350,47 +349,7 @@ class Data(VisualizationSharedDataStore):
         """
         Saves the map record to file in the maps directory.
         """
-        
-        try:
-            log.info(" ---- Saving map")
-            
-            # Make sure the directory exists
-            Path("maps").mkdir(parents=True, exist_ok=True)
-            
-            with open("maps/" + self.map_data_dict['map_name'] + ".json", 'w+') as outfile:
-                # Date the file
-                self.map_data_dict["generated_on"] = datetime.now().strftime(
-                    "%d/%m/%Y_%H:%M:%S")
-                
-                # Save bounds
-                # Make we don't have any cascading lists
-                self.Viz.data_table.bounds_table.source.data = {'minx': self.flatten(self.bounds_table_source.data['minx']),
-                                                                'miny': self.flatten(self.bounds_table_source.data['miny']),
-                                                                'maxx': self.flatten(self.bounds_table_source.data['maxx']),
-                                                                'maxy': self.flatten(self.bounds_table_source.data['maxy'])}
-                self.map_data_dict["bounds"] = self.Viz.data_table.bounds_table.source.data
-                
-                # Save objects of interest
-                if(self.Viz.map_name is None):
-                    # The first line is empty when saving from scrapt, so skip that entry
-                    self.map_data_dict["data_fs"]['xs'] = self.Viz.data_table.fires_table.source.data['xs'][1:]
-                    self.map_data_dict["data_fs"]['ys'] = self.Viz.data_table.fires_table.source.data['ys'][1:]
-                else:
-                    self.map_data_dict["data_fs"]['xs'] = self.Viz.data_table.fires_table.source.data['xs']
-                    self.map_data_dict["data_fs"]['ys'] = self.Viz.data_table.fires_table.source.data['ys']
-                    
-                # Make we don't have any cascading lists
-                self.map_data_dict["data_snr"]['x'] = self.flatten(self.Viz.data_table.survivors_table.source.data['x'])
-                self.map_data_dict["data_snr"]['y'] = self.flatten(self.Viz.data_table.survivors_table.source.data['y'])
-
-                # Save as pretty json
-                json.dump(self.map_data_dict,
-                          outfile,
-                          indent=4,
-                          sort_keys=True)
-        except:
-            log.error(traceback.format_exc())
-            log.error("Map save encountered an issue (see traceback above)")
+        map_reader.save_map_record_as(self, log)
 
     def load_map_record(self, map_name: str) -> Dict:
         """
@@ -406,11 +365,8 @@ class Data(VisualizationSharedDataStore):
         Dict
             The data read from the map record file.
         """
+        return map_reader.load_map_record(self, log, map_name)
         
-        with open("maps/" + map_name + ".json") as f:
-            map_data = json.load(f)
-            return map_data
-    
     def bind_bbox(self) -> None:
         """
         Binds the window to a rectangle with the y dimension of
@@ -656,7 +612,7 @@ class Data(VisualizationSharedDataStore):
                     # If this is the last of our water, use up all of the water and calculate how much that would shrink the fire by
                     factor = self.water_quantity / ( ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0 ) * polygon_reduction_factor
                     self.polygons_of_interest[idx] = self.shrink_shapely_polygon(self.polygons_of_interest[idx], 
-                                                                                 factor * ((time_location_observed - self.fire_last_observed_time)/1000.0))
+                                                                                 factor)
                     self.water_quantity = 0
                     
                 if(self.polygons_of_interest[idx].is_empty):

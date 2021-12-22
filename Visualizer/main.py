@@ -158,12 +158,24 @@ class Visualizer(VisualizationSharedDataStore):
                                                                self.Viz.button.save_as_button,
                                                                self.Viz.button.cheat_button,
                                                                sizing_mode="stretch_both"), sizing_mode="stretch_both"))
-        elif self.Viz.mode == Mode.VISUALIZATION and self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE:
+        elif self.Viz.mode == Mode.VISUALIZATION and self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE and not self.Viz.data.disable_save:
             curdoc().add_root(Row(self.Viz.plot.figure, Column(self.Viz.button.radio_button_description,
                                                                self.Viz.data_table.stats_table_description,
                                                                self.Viz.data_table.stats_table,
                                                                self.Viz.data_table.survivors_table_description,
                                                                self.Viz.data_table.survivors_table,
+                                                               self.Viz.data_table.bounds_table_description,
+                                                               self.Viz.data_table.bounds_table,
+                                                            #    self.Viz.data_table.wind_table_description,
+                                                            #    self.Viz.data_table.wind_table,
+                                                               self.Viz.text.map_name_text_box,
+                                                               self.Viz.button.save_as_button,
+                                                               self.Viz.button.cheat_button,
+                                                               sizing_mode="stretch_both"), sizing_mode="stretch_both"))
+        elif self.Viz.mode == Mode.VISUALIZATION and self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE and self.Viz.data.disable_save:
+            curdoc().add_root(Row(self.Viz.plot.figure, Column(self.Viz.button.radio_button_description,
+                                                               self.Viz.data_table.stats_table_description,
+                                                               self.Viz.data_table.stats_table,
                                                                self.Viz.data_table.bounds_table_description,
                                                                self.Viz.data_table.bounds_table,
                                                             #    self.Viz.data_table.wind_table_description,
