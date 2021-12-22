@@ -2,6 +2,7 @@
 
 - [How long are the missions?](#how-long-are-the-missions)
 - [How far away will the drone see the survivors/water/fire?](#how-far-away-will-the-drone-see-the-survivorswaterfire)
+- [How much water will the fire suppression mission have?](#how-much-water-will-the-fire-suppression-mission-have)
 - [Will I have access to the locations and statuses of the survivors/fires/water?](#will-i-have-access-to-the-locations-and-statuses-of-the-survivorsfireswater)
 - [How quickly does the drone climb/descend/move laterally?](#how-quickly-does-the-drone-climbdescendmove-laterally)
 - [How big are the maps?](#how-big-are-the-maps)
@@ -17,6 +18,10 @@
 
 - Survivors: 31 meters away
 - Fire/water: 5 meters away
+
+## How much water will the fire suppression mission have?
+
+The drone can take up and deposit up to 60 seconds worth of water (it takes the same amount of time to take up water as it does to deposit it).
 
 ## Will I have access to the locations and statuses of the survivors/fires/water?
 

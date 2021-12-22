@@ -250,7 +250,7 @@ class Data(VisualizationSharedDataStore):
         self.survivors_found = 0
         
         # Maximum quantity of water the drone can hold
-        self.water_limit = 100.0
+        self.water_limit = 600.0
         # Rate of water uptake and deposit
         self.water_per_second = 10.0
         # Keep track of the current quantity of water
