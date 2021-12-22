@@ -117,6 +117,8 @@ class Data(VisualizationSharedDataStore):
         Data source to drive the drawing of the radii of influence (useful for debugging).
     debug_drone_table_source : bokeh.models.ColumnDataSource
         Data source to drive the drone debug table.
+    water_per_second : float
+        Amount of water taken up and deposited in gallons per second.
         
     Methods
     -------
@@ -248,7 +250,9 @@ class Data(VisualizationSharedDataStore):
         self.survivors_found = 0
         
         # Maximum quantity of water the drone can hold
-        self.water_limit = 100
+        self.water_limit = 100.0
+        # Rate of water uptake and deposit
+        self.water_per_second = 10.0
         # Keep track of the current quantity of water
         self.water_quantity = 0
         # Time when first observed over water (-1 means that was most recently observed over land)
@@ -601,16 +605,16 @@ class Data(VisualizationSharedDataStore):
             for idx in object_indeces:
                 # Make sure the fire fighting isn't over-powered
                 polygon_reduction_factor = 0.05
-                if(self.water_quantity > ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0):
+                if(self.water_quantity > ((time_location_observed - self.fire_last_observed_time)/1000.0) * self.water_per_second):
                     # If we have more water than we can deposit in this time segment, shrink by maximum for the time
                     # and recalculate our water reserves
                     self.polygons_of_interest[idx] = self.shrink_shapely_polygon(self.polygons_of_interest[idx], 
                                                                                  polygon_reduction_factor * ((time_location_observed - self.fire_last_observed_time)/1000.0))
                 
-                    self.water_quantity -= ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0
+                    self.water_quantity -= ((time_location_observed - self.fire_last_observed_time)/1000.0) * self.water_per_second
                 else:
                     # If this is the last of our water, use up all of the water and calculate how much that would shrink the fire by
-                    factor = self.water_quantity / ( ((time_location_observed - self.fire_last_observed_time)/1000.0) * 10.0 ) * polygon_reduction_factor
+                    factor = self.water_quantity * polygon_reduction_factor
                     self.polygons_of_interest[idx] = self.shrink_shapely_polygon(self.polygons_of_interest[idx], 
                                                                                  factor)
                     self.water_quantity = 0
