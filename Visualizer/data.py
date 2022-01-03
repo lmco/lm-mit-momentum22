@@ -26,6 +26,7 @@ import os
 import inspect
 from typing import Dict
 from map_reader import map_reader
+import time
 
 # Multiprocessing for grpc data
 from multiprocessing import Queue
@@ -458,6 +459,7 @@ class Data(VisualizationSharedDataStore):
         
         try:
             if(not self.qLocation.empty()):
+                time.sleep(0.0001)
                 # log.info(" --- Updating local location")
                 # Don't spam the console
                 pass
