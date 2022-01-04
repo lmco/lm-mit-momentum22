@@ -33,6 +33,6 @@ class Text(VisualizationSharedDataStore):
         self.map_name_text_box = TextInput(value=self.Viz.data.map_data_dict['map_name'], 
                                            title="Enter map name (file will be saved as <what you enter>.json):",
                                            sizing_mode="stretch_width", 
-                                           disabled=self.Viz.mode == Mode.VISUALIZATION)
+                                           disabled=self.Viz.mode == Mode.VISUALIZATION or self.Viz.data.disable_save)
         self.map_name_text_box.on_change(
             'value_input', self.Viz.button.set_map_name)
