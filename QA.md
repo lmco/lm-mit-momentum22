@@ -14,6 +14,7 @@
 ## What are the missions?
 - Fire/water: Put out as much of the fire as you can, as fast as you can
   - You will be given a map with clearly defined land/water boundaries and KNOWN fire locations
+  - Fires are stationary and do not move over time
   - Pick up water by flying over water (no need to stop or hover)
   - Put out fire by flying over fire
   - Choose the most efficient sequencing/routing to fight the most fires as quickly as possible
@@ -21,9 +22,11 @@
 
 - Search and Rescue: search as much of the water area as you can, as fast as you can 
   - You will be given a map with clearly defined land/water boundaries but UNKNOWN number of survivors in UNKNOWN locations
+  - Survivors are stationary and do not move over time
   - Find survivors by flying within 31m of them
   - No rescue required - your vehicle is just the "spotter"
-  - Choose the most efficient routing to search the most area as quickly as possible
+  - Choose the most efficient routing to search the most area as quickly as possible.
+  - You may use any search pattern, including pre-established patterns or those of your own design
   - Mission complete when you are confident that you have found all the survivors (unknown number), or you run out of time (10 mins)
  
 
