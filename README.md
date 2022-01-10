@@ -17,7 +17,7 @@ If you are viewing this file offline, the most up to date version of these instr
 ### How to download this project to your computer
 
 See [Section 8](#8-clone-the-momentum22-project-folder-from-github) for more details.
-
+htt
 ``` sh
 # Create a folder for the Momentum project in your home (~) directory
 mkdir -p ~/Momentum
@@ -246,7 +246,7 @@ Refer to the [geopandas](https://geopandas.org/getting_started/install.html#inst
 cd ~/Momentum
 
 # Clone the project 
-git clone https://github.com/lmco/lm-mit-momentum22.git
+git clone git@github.com:lmco/lm-mit-momentum22.git
 ```
 
 ![Clone Momentum](docs/cloning.gif)
