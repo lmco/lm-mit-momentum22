@@ -1,5 +1,6 @@
 # Common Questions & Answers<!-- omit in toc -->
 
+- [What are the missions?](#what-are-the-missions)
 - [How long are the missions?](#how-long-are-the-missions)
 - [How far away will the drone see the survivors/water/fire?](#how-far-away-will-the-drone-see-the-survivorswaterfire)
 - [How much water will the fire suppression mission have?](#how-much-water-will-the-fire-suppression-mission-have)
@@ -9,6 +10,22 @@
 - [How will the competition maps be provided?](#how-will-the-competition-maps-be-provided)
 - [How can I make a suggestion for design or functionality improvements?](#how-can-i-make-a-suggestion-for-design-or-functionality-improvements)
 - [Who are the Lockheed Martin points of contact and how can I get in touch with them?](#who-are-the-lockheed-martin-points-of-contact-and-how-can-i-get-in-touch-with-them)
+
+## What are the missions?
+- Fire/water: Put out as much of the fire as you can, as fast as you can
+  - You will be given a map with clearly defined land/water boundaries and KNOWN fire locations
+  - Pick up water by flying over water (no need to stop or hover)
+  - Put out fire by flying over fire
+  - Choose the most efficient sequencing/routing to fight the most fires as quickly as possible
+  - Mission complete when you are confident that the fires have been extinguished, or you run out of time (10 mins)
+
+- Search and Rescue: search as much of the water area as you can, as fast as you can 
+  - You will be given a map with clearly defined land/water boundaries but UNKNOWN number of survivors in UNKNOWN locations
+  - Find survivors by flying within 31m of them
+  - No rescue required - your vehicle is just the "spotter"
+  - Choose the most efficient routing to search the most area as quickly as possible
+  - Mission complete when you are confident that you have found all the survivors (unknown number), or you run out of time (10 mins)
+ 
 
 ## How long are the missions?
 
