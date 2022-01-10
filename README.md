@@ -188,6 +188,9 @@ git clone https://github.com/PX4/PX4-Autopilot.git --recursive
 # Get into the PX4 project directory
 cd PX4-Autopilot
 
+# Run installer script
+bash ./Tools/setup/ubuntu.sh
+
 # Build the project with default drone target and jMavSim simulation target
 HEADLESS=1 make px4_sitl jmavsim
 ```
