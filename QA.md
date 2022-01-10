@@ -71,3 +71,6 @@ Reach out to any of the following people via Slack:
 - Irina Lavryonova
 - Michael Nothem
 - Stephen Kubik
+- Navid Tehrani
+- Jay Thibodeau
+- Rochelle Shidler
