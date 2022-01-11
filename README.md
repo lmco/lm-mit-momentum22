@@ -204,8 +204,8 @@ MAVSDK provides the Python hooks to interface with PX4. This allows the user to 
 Summary of [Python MAVSDK installation guide](https://github.com/mavlink/MAVSDK-Python#mavsdk-python):
 
 ``` sh
-# Install MAVSDK Python library
-pip3 install mavsdk
+# Install MAVSDK Python library version 0.21.0 - later versions do not currently work
+pip3 install --force-reinstall mavsdk==0.21.0
 ```
 
 ![Installing mavsdk](docs/mavsdk.gif)
