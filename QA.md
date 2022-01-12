@@ -1,10 +1,17 @@
-# Common Questions & Answers<!-- omit in toc -->
+# Frequent Questions & Answers<!-- omit in toc -->
 
 - [What are the missions?](#what-are-the-missions)
+  - [Fire Suppression](#fire-suppression)
+  - [Search and Rescue](#search-and-rescue)
 - [How long are the missions?](#how-long-are-the-missions)
 - [How far away will the drone see the survivors/water/fire?](#how-far-away-will-the-drone-see-the-survivorswaterfire)
 - [How much water will the fire suppression mission have?](#how-much-water-will-the-fire-suppression-mission-have)
+- [How much water does it take to extinguish a fire?](#how-much-water-does-it-take-to-extinguish-a-fire)
+- [When will the drone start dropping the water?](#when-will-the-drone-start-dropping-the-water)
 - [Will I have access to the locations and statuses of the survivors/fires/water?](#will-i-have-access-to-the-locations-and-statuses-of-the-survivorsfireswater)
+  - [Fire Suppression (same for practice and competition)](#fire-suppression-same-for-practice-and-competition)
+  - [Search and Rescue](#search-and-rescue-1)
+- [Where will the drone start the mission?](#where-will-the-drone-start-the-mission)
 - [How quickly does the drone climb/descend/move laterally?](#how-quickly-does-the-drone-climbdescendmove-laterally)
 - [How big are the maps?](#how-big-are-the-maps)
 - [How will the competition maps be provided?](#how-will-the-competition-maps-be-provided)
@@ -16,22 +23,36 @@
 
 ## What are the missions?
 
-- Fire/water: Put out as much of the fire as you can, as fast as you can
-  - You will be given a map with clearly defined land/water boundaries and KNOWN fire locations
-  - Fires are stationary and do not move over time
-  - Pick up water by flying over water (no need to stop or hover)
-  - Put out fire by flying over fire
-  - Choose the most efficient sequencing/routing to fight the most fires as quickly as possible
-  - Mission complete when you are confident that the fires have been extinguished, or you run out of time (10 mins)
+### Fire Suppression
 
-- Search and Rescue: search as much of the water area as you can, as fast as you can
+- Put out as much of the fire as you can, as fast as you can
+  - You will be given a map with clearly defined land/water boundaries and KNOWN fire locations
+    - Land/water boundaries are defined in the [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) file
+    - Fire locations are defined in the map record's `data_fs` field (check the [/maps directory](https://github.com/lmco/lm-mit-momentum22/tree/main/maps) for all of the map records)
+  - Fires are stationary and do not move over time
+  - You do not need to worry about any environmental conditions such as wind or air density
+  - Pick up water by flying over water (no need to stop or hover)
+    - Up to 60 seconds worth of water may be picked up or deposited at any one time
+  - Put out fire by flying over fire
+    - See for more details[How much water does it take to extinguish a fire?](#how-much-water-does-it-take-to-extinguish-a-fire)
+  - Choose the most efficient sequencing/routing to fight the most fires as quickly as possible
+    - The number percent of total fire area extinguished will be your score. Time with be the tie breaker for those who extinguish all fires.
+  - Mission complete when you are confident that the fires have been extinguished, or you run out of time (10 mins)
+    - Land to indicate that mission is complete
+
+### Search and Rescue
+
+- Search as much of the water area as you can, as fast as you can
   - You will be given a map with clearly defined land/water boundaries but UNKNOWN number of survivors in UNKNOWN locations
+    - Land/water boundaries are defined in the [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) file
   - Survivors are stationary and do not move over time
+  - You do not need to worry about any environmental conditions such as wind or air density
   - Find survivors by flying within 31m of them
   - No rescue required - your vehicle is just the "spotter"
   - Choose the most efficient routing to search the most area as quickly as possible.
   - You may use any search pattern, including pre-established patterns or those of your own design
-  - Mission complete when you are confident that you have found all the survivors (unknown number), or you run out of time (10 mins)
+  - Mission complete when you are confident that you have found all of the survivors (unknown number), or you run out of time (10 mins)
+    - Land to indicate that mission is complete. Time with be the tie breaker for those who find identical numbers of survivors.
 
 ## How long are the missions?
 
@@ -46,21 +67,36 @@
 
 The drone can take up and deposit up to 60 seconds worth of water (it takes the same amount of time to take up water as it does to deposit it).
 
+## How much water does it take to extinguish a fire?
+
+The fire is shrunk by a factor of 0.05 of its previous area for every second that the water is deposited over the fire, but scaled by the update rate (100 Hz or once every 0.01 sec). Put another way, after 1 second of water, the fire will have `area=0.95*0.01*previous_area` executed `1/update_rate` (100) times, where `area` of the previous iteration becomes the `previous_area` of the next iteration. While not realistic, this simplifies implementation and makes big fires not as daunting to put out.
+
+## When will the drone start dropping the water?
+
+The water will deposit so long as the drone is at least within a 5 meter radius of a fire edge or vertex or is inside the fire polygon.
+
 ## Will I have access to the locations and statuses of the survivors/fires/water?
 
-- Fire Suppression (same for practice and competition):
-  - Fire statuses: Not programmatically, but these metrics are available via the Visualizer tables.
-  - Fire locations: Map records contain fire locations in the `data_fs` field (see [maps/boston_fire.json](https://github.com/lmco/lm-mit-momentum22/blob/main/maps/boston_fire.json#L16) for example). These locations are also viewable via the Visualizer tables. Upcoming: near real-time locations will be available programmatically via a connection to the visualizer.
-  - Water status: same as fire statuses.
-  - Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries.
-- Search and Rescue
-  - Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries.
-  - Practice maps
-    - Survivor statuses: Not programmatically, but these metrics are available via the Visualizer tables. Upcoming: a near real-time count of found survivors will be available programmatically via a connection to the visualizer.
-    - Survivor locations: Map records contain survivor locations in the `data_snr` field (see [maps/boston_sar.json](https://github.com/lmco/lm-mit-momentum22/blob/main/maps/boston_sar.json#L20) for example). These locations are also viewable via the Visualizer tables.
-  - Competition map
-    - Survivor statuses: The total number of survivors and how many have been discovered is viewable via the Visualizer tables only. Upcoming: a near real-time count of found survivors will be available programmatically via a connection to the visualizer.
-    - Survivor locations: No access to any locations for competition maps (neither programmatically nor via Visualizer tables).
+### Fire Suppression (same for practice and competition)
+
+- Fire statuses: Not programmatically, but these metrics are available via the Visualizer tables.
+- Fire locations: Map records contain fire locations in the `data_fs` field (see [maps/boston_fire.json](https://github.com/lmco/lm-mit-momentum22/blob/main/maps/boston_fire.json#L16) for example). These locations are also viewable via the Visualizer tables. Upcoming: near real-time locations will be available programmatically via a connection to the visualizer.
+- Water status: same as fire statuses.
+- Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries.
+
+### Search and Rescue
+
+- Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries.
+- Practice maps
+  - Survivor statuses: Not programmatically, but these metrics are available via the Visualizer tables. Upcoming: a near real-time count of found survivors will be available programmatically via a connection to the visualizer.
+  - Survivor locations: Map records contain survivor locations in the `data_snr` field (see [maps/boston_sar.json](https://github.com/lmco/lm-mit-momentum22/blob/main/maps/boston_sar.json#L20) for example). These locations are also viewable via the Visualizer tables.
+- Competition map
+  - Survivor statuses: The total number of survivors and how many have been discovered is viewable via the Visualizer tables only. Upcoming: a near real-time count of found survivors will be available programmatically via a connection to the visualizer.
+  - Survivor locations: No access to any locations for competition maps (neither programmatically nor via Visualizer tables).
+
+## Where will the drone start the mission?
+
+The drone's initial position is determined by the `.bash` script we have provided you at the root of this repository. The competition drone will start on the coastline, in the vicinity of water for both mission types.
 
 ## How quickly does the drone climb/descend/move laterally?
 
@@ -77,7 +113,7 @@ The drone can take up and deposit up to 60 seconds worth of water (it takes the 
 
 ## How big are the maps?
 
-Maps are 16:9 aspect ratio with latitudinal dimension of 0.003 degrees.
+Maps are 16:9 aspect ratio with latitudinal dimension of 0.003 degrees. You may check the exact dimensions and location of geographical bounds of a map by inspecting the `bounds` field of your map's `.json` record. You will find these map records in the [/maps directory](https://github.com/lmco/lm-mit-momentum22/tree/main/maps).
 
 ## How will the competition maps be provided?
 
@@ -85,7 +121,7 @@ The competition maps will be pushed to this GitHub repository a few days before 
 
 ## Can I use an outside library to accomplish the mission?
 
-Yes, you may use additional libraries. This includes libraries included with Python as well as those available via `pip`. Staff will run your scripts at the end of the competition and will make their best efforts to install your dependencies.
+Yes, you may use additional outside libraries. This includes libraries included with Python as well as those available via `pip`. Staff will run your scripts at the end of the competition and will make their best efforts to install your dependencies.
 
 We just ask that you please :
 
@@ -184,7 +220,6 @@ Steps:
     ```
 
     >At this point you should see a list of updates being applied to your laptop.  If so: success!  If not: contact us on the Slack channels to help figure out the problem.
-
 
 ## How can I make a suggestion for design or functionality improvements?
 
