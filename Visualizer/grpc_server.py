@@ -39,23 +39,23 @@ class Momentum22VizServicer(viz_connect_grpc.Momentum22VizServicer):
         Gets the drone location from the grpc connection, puts it into the appropriate queue and replies back with the acknowledgement.
     """
     
-    def __init__(self, ql: Queue, qt: Queue, qp: Queue) -> None:
+    def __init__(self, qLanding: Queue, qTakeoff: Queue, qLocation: Queue) -> None:
         """ 
         Makes the grpc servicer.
 
         Parameters
         ----------
-        ql : multiprocessing.Queue
+        qLanding : multiprocessing.Queue
             Queue where to put landing notifications.
-        qt : multiprocessing.Queue
+        qTakeoff : multiprocessing.Queue
             Queue where to put takeoff notifications.
-        qp : multiprocessing.Queue
+        qLocation : multiprocessing.Queue
             Queue where to put position (location) notifications.
         """
         
-        self.qLanding = ql
-        self.qTakeoff = qt
-        self.qLocation = qp
+        self.qLanding = qLanding
+        self.qTakeoff = qTakeoff
+        self.qLocation = qLocation
     
     
     
