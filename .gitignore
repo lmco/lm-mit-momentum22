@@ -150,6 +150,9 @@ cython_debug/
 # Local History for Visual Studio Code
 .history/
 
+# Temporary files
+.temp/*
+
 ### VisualStudioCode Patch ###
 # Ignore all local history of files
 .history

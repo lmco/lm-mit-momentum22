@@ -4,6 +4,7 @@
 ##################################################################
 
 # Datastore
+from bokeh.core.property.primitive import Bool
 from visualizationSharedDataStore import VisualizationSharedDataStore
 from visualizationSharedDataStore import Mode
 
@@ -13,7 +14,7 @@ from bokeh.util.logconfig import bokeh_logger as log
 
 # Shape and coordinate shaping tools
 import geopandas as gpd
-from shapely.geometry import Point, Polygon
+from shapely.geometry import Point, Polygon, mapping
 from shapely.ops import transform
 from rtree import index
 import pyproj
@@ -34,9 +35,13 @@ import traceback
 from os.path import exists
 
 # Multiprocessing for grpc data
-from multiprocessing import Queue
+from multiprocessing import Queue, Pipe
 from queue import Empty
 import collections
+
+# Grpc
+import viz_pb2 as viz_connect
+import viz_pb2_grpc as viz_connect_grpc
 
 
 class MapType(IntEnum):
@@ -101,6 +106,8 @@ class Data(VisualizationSharedDataStore):
         Time when started collecting water.
     fire_last_observed_time : int
         Time when last observed fire.
+    fire_pct_remaining : float
+        Amount of fire remaining throughout the mission.
     waterbodies_filepath : pathlib.Path list
         Filepath where to find the waterbodies file.
     ownship_filepath : pathlib.Path list
@@ -163,6 +170,7 @@ class Data(VisualizationSharedDataStore):
         self.qLanding = Queue()
         self.qTakeoff = Queue()
         self.qLocation = Queue()
+        os.makedirs(os.path.dirname(self.Viz.viz_file_io), exist_ok=True)
         
         # Time when we started the mission (-1 means we haven't started)
         self.start_time = -1
@@ -266,6 +274,8 @@ class Data(VisualizationSharedDataStore):
         
         # Time when last observed fire (-1 means haven't seen fire)
         self.fire_last_observed_time = -1
+        # Amount of fire remaining throughout the mission
+        self.fire_pct_remaining = 100
 
         # Where to find the waterbodies svg (can't use the self.waterbodies because Bokeh's incomplete
         # treatment of GeoJSON files)
@@ -490,7 +500,23 @@ class Data(VisualizationSharedDataStore):
         self.plot.figure.x_range.end = new_max_x
         self.plot.figure.y_range.start = new_min_y
         self.plot.figure.y_range.end = new_max_y
-
+        
+    def prep_viz_data(self) -> Bool:
+        """
+        
+        """
+        try:
+            with open(self.Viz.viz_file_io, 'w') as f:
+                json.dump({"survivors_found" : self.survivors_found if self.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE else 0,
+                        "fires_pct_remaining" : self.fire_pct_remaining,
+                        "water_pct_remaining": self.water_quantity / float(self.water_limit) * 100.0,
+                        "fire_polygons": [mapping(poly) for poly in self.polygons_of_interest] if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION else []}, f, indent=4, sort_keys=True)
+                f.flush()
+                return True
+        except KeyboardInterrupt:
+            log.info("Cleaning up temp files")
+            os.remove(self.Viz.viz_file_io)
+        
     def check_landing_status(self) -> None:
         """
         Checks if the queue filled by grpc has anything to process and patches the new information in.
@@ -521,7 +547,7 @@ class Data(VisualizationSharedDataStore):
             
             # If queue has some thing for us and we're ready for it, patch the new data in.
             if(tn.isTakenOff and self.start_time == -1):
-                self.start_time = tn.px4Time/1000.0
+                self.start_time = tn.time/1000.0
                 self.stats_table_source.patch({'status': [(0, "Taking Off")]})
         except Empty:
             pass
@@ -542,7 +568,7 @@ class Data(VisualizationSharedDataStore):
             
             # If queue has some thing for us, patch the new data in.
             # Dealing with moderately disparate orders of magnitude, so lose precision when doing all in one go
-            elapsed_duration = loc.px4Time/1000.0 - self.start_time
+            elapsed_duration = loc.time/1000.0 - self.start_time
             
             # Update the mission statistics table
             self.stats_table_source.patch({'elapsed_dur': [(0, math.floor(elapsed_duration))],
@@ -574,7 +600,7 @@ class Data(VisualizationSharedDataStore):
             # See if there are any interesting intersections
             drone_circle = self.point_to_circle((loc.longitude, loc.latitude), self.radius_of_influence)
             if self.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION:
-                self.fire_suppression_intersections(drone_circle, loc.px4Time)
+                self.fire_suppression_intersections(drone_circle, loc.time)
             else:
                 self.snr_intersections(drone_circle)
                 
@@ -739,14 +765,16 @@ class Data(VisualizationSharedDataStore):
                                    if self.water_quantity > self.water_limit 
                                    else self.water_quantity)
             # Patch in our current water quantity
-            self.stats_table_source.patch({'mission_stat': [(0, self.water_quantity)]})
+            self.stats_table_source.patch({'mission_stat': [(0, self.water_quantity/10.0)]})
         else:
             # Reset water observation time if didn't see water
             self.water_start_time = -1
         
+        
         # Patch in the score and the mission statistics
-        self.stats_table_source.patch({'score': [(0, 100.0 - (fire_area_now/float(self.starting_fire_area) * 100.0))]})
-        self.stats_table_source.patch({'mission_stat': [(0, self.water_quantity)]})
+        self.fire_pct_remaining = fire_area_now/float(self.starting_fire_area) * 100.0
+        self.stats_table_source.patch({'score': [(0, 100.0 - self.fire_pct_remaining)]})
+        self.stats_table_source.patch({'mission_stat': [(0, self.water_quantity/10.0)]})
     
     def snr_intersections(self, drone_circle: Polygon) -> None:
         """
@@ -771,7 +799,8 @@ class Data(VisualizationSharedDataStore):
                 self.survivors_table_source.patch({'alpha': [(idx, 1)]});
             
         # Patch in the score and the mission statistics
-        self.stats_table_source.patch({'mission_stat': [(0, self.survivors_found/float(len(self.map_data_dict["data_snr"]['x']))*100.0)]})
+        # self.stats_table_source.patch({'mission_stat': [(0, self.survivors_found/float(len(self.map_data_dict["data_snr"]['x']))*100.0)]})
+        self.stats_table_source.patch({'mission_stat': [(0, self.survivors_found)]})
         self.stats_table_source.patch({'score': [(0, self.survivors_found)]})
 
     def check_drone_location_against_object_of_interest(self, drone_circle: Polygon, objects: list) -> list:

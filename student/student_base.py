@@ -13,8 +13,6 @@
 #
 # The vizualization communications, Mavlink communications, and student code are all in seperate threads.
 
-# TODO: Store PX4 Time is self.px4Time
-
 import sys
 sys.path.append('Visualizer/')
 
@@ -26,13 +24,16 @@ import threading
 import mavsdk
 import asyncio
 import navpy
+from shapely.geometry import shape
+import os
+import json
 
 class student_base:
 
 	def __init__(self):
 		self.channel = grpc.insecure_channel('localhost:51052')
 		self.stub = viz_connect_grpc.Momentum22VizStub(self.channel)
-		self.px4Time = 0
+		self.time = 0
 		self.msgId = 0
 		self.in_air_lp = False
 		self.home_alt = 0
@@ -42,6 +43,10 @@ class student_base:
 		self.telemetry['latitude'] = 0
 		self.telemetry['longitude'] = 0
 		self.telemetry['in_air'] = False
+		self.telemetry['water_pct_remaining'] = 0
+		self.telemetry['fires_pct_remaining'] = 100
+		self.telemetry['fire_polygons'] = []
+		self.telemetry['survivors_found'] = 0
 
 		self.commands = {}
 		self.commands['arm'] = False
@@ -70,17 +75,18 @@ class student_base:
 	def viz_thread_main(self, args):
 		while not self.viz_stopping:
 			self.viz_send_updates()
+			self.viz_read_viz_data()
 			time.sleep(0.1)
 					
 	def viz_send_updates(self):
-		self.px4Time = int(time.time()*1000.0)
+		self.time = int(time.time()*1000.0)
 		if(self.telemetry['in_air']):
 			self.viz_send_location(self.telemetry['latitude'], self.telemetry['longitude'])
 		self.viz_send_ground_state(self.telemetry['in_air'])
 		self.new_data_set = False
 						
 	def viz_send_location(self, latitude, longitude):
-		loc = viz_connect.Location(msgId=self.msgId, latitude=latitude, longitude=longitude, px4Time=self.px4Time)
+		loc = viz_connect.Location(msgId=self.msgId, latitude=latitude, longitude=longitude, time=self.time)
 		self.msgId += 1
 		ack = self.stub.SetDroneLocation(loc)
 
@@ -88,12 +94,29 @@ class student_base:
 		if in_air != self.in_air_lp:
 			self.in_air_lp = in_air
 			if in_air:
-				tn = viz_connect.TakeoffNotification(msgId=self.msgId, isTakenOff=True, px4Time=self.px4Time)
+				tn = viz_connect.TakeoffNotification(msgId=self.msgId, isTakenOff=True, time=self.time)
 				ack = self.stub.SetTakeoffStatus(tn)
 			if not in_air:
-				ln = viz_connect.LandingNotification(msgId=self.msgId, isLanded=True, px4Time=self.px4Time)
+				ln = viz_connect.LandingNotification(msgId=self.msgId, isLanded=True, time=self.time)
 				ack = self.stub.SetLandingStatus(ln)
 			self.msgId += 1
+  
+	def viz_read_viz_data(self):
+		try:
+			if(os.path.getsize('.temp/sim_data.json') > 15 and os.path.isfile('.temp/sim_data.json')):
+				with open('.temp/sim_data.json', 'r', encoding='utf-8', errors='ignore') as f:
+					data = json.load(f)
+					if ("water_pct_remaining" in data):
+						self.telemetry['water_pct_remaining'] = data['water_pct_remaining']
+					if ("fires_pct_remaining" in data):
+						self.telemetry['fires_pct_remaining'] = data['fires_pct_remaining']
+					if ("fire_polygons" in data):
+						self.telemetry['fire_polygons'] = [shape(poly) for poly in data['fire_polygons']]
+					if ("survivors_found" in data):
+						self.telemetry['survivors_found'] = data['survivors_found']
+		except json.decoder.JSONDecodeError:
+			# print("json error")
+			pass
 
 	######### MAV Interface ###########
 	

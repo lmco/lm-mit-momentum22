@@ -68,7 +68,12 @@ class my_flight_controller(student_base):
 
 
 		print("Picking up water")
-		time.sleep(10)
+		water_start_time = time.time()
+		while(time.time() - water_start_time < 10.0):
+			print("Water level: " + str(round(telemetry['water_pct_remaining'], 2)) + '%')
+			time.sleep(5)
+		print("Water level: " + str(round(telemetry['water_pct_remaining'], 2)) + '%')
+
 		# fire
 		print("Go to fire")
 		goalLat = 42.36045 # fire
@@ -85,7 +90,15 @@ class my_flight_controller(student_base):
 		# Home
 
 		print("Putting out fire")
-		time.sleep(10)
+		water_start_time = time.time()
+		while(time.time() - water_start_time < 10.0):
+			time.sleep(5)
+			print("Fire remaining: " + str(round(telemetry['fires_pct_remaining'], 2)) + '%')
+   
+			# print("Fire polygons")
+			# for poly in self.telemetry['fire_polygons']:
+			# 	print(poly.wkt)
+		print("Fire remaining: " + str(round(telemetry['fires_pct_remaining'], 2)) + '%')
 
 		print("Returning to Base")
 		goalLat = homeLat # Home

@@ -52,3 +52,5 @@ class VisualizationSharedDataStore(object):
     
     mode = Mode.VISUALIZATION
     map_name = None
+    
+    viz_file_io = '.temp/sim_data.json'

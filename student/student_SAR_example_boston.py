@@ -61,10 +61,13 @@ class my_flight_controller(student_base):
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 		tol = 0.0001 # Approximately 50 feet tolerance
+		last_survivor_count = telemetry['survivors_found']
+		print('Aircraft is enroute to first survivor')
 		while err > tol:
-			print('Aircraft is enroute to first survivor')
-			time.sleep(10)
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
+			if (last_survivor_count < telemetry['survivors_found']):
+				print("Found a survivor!")
+				last_survivor_count = telemetry['survivors_found']
 
 		# Second survivor
 		print("Goto second survivor")
@@ -74,10 +77,12 @@ class my_flight_controller(student_base):
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 		tol = 0.0001 # Approximately 50 feet tolerance
+		print('Aircraft is enroute to first survivor')
 		while err > tol:
-			print('Aircraft is enroute second survivor')
-			time.sleep(10)
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
+			if (last_survivor_count < telemetry['survivors_found']):
+				print("Found a survivor!")
+				last_survivor_count = telemetry['survivors_found']
 			
 		# Home
 		print("Returning to Base")
@@ -87,10 +92,12 @@ class my_flight_controller(student_base):
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 		tol = 0.00001 # Approximately 5 feet tolerance
+		print('Aircraft is enroute; returning to base')
 		while err > tol:
-			print('Aircraft is enroute; returning to base')
-			time.sleep(10)
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
+			if (last_survivor_count < telemetry['survivors_found']):
+				print("Found a survivor!")
+				last_survivor_count = telemetry['survivors_found']
 		
 		print("Landing")
 		self.land()
