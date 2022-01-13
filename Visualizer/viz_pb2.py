@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\tviz.proto\"O\n\x08Location\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08latitude\x18\x02 \x01(\x01\x12\x11\n\tlongitude\x18\x03 \x01(\x01\x12\x0f\n\x07px4Time\x18\x04 \x01(\x04\"G\n\x13LandingNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08isLanded\x18\x02 \x01(\x08\x12\x0f\n\x07px4Time\x18\x03 \x01(\x04\"I\n\x13TakeoffNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x12\n\nisTakenOff\x18\x02 \x01(\x08\x12\x0f\n\x07px4Time\x18\x03 \x01(\x04\"\x17\n\x06ReqAck\x12\r\n\x05msgId\x18\x01 \x01(\x04\x32\xa3\x01\n\rMomentum22Viz\x12\x33\n\x10SetLandingStatus\x12\x14.LandingNotification\x1a\x07.ReqAck\"\x00\x12\x33\n\x10SetTakeoffStatus\x12\x14.TakeoffNotification\x1a\x07.ReqAck\"\x00\x12(\n\x10SetDroneLocation\x12\t.Location\x1a\x07.ReqAck\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\tviz.proto\"L\n\x08Location\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08latitude\x18\x02 \x01(\x01\x12\x11\n\tlongitude\x18\x03 \x01(\x01\x12\x0c\n\x04time\x18\x04 \x01(\x04\"D\n\x13LandingNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x10\n\x08isLanded\x18\x02 \x01(\x08\x12\x0c\n\x04time\x18\x03 \x01(\x04\"F\n\x13TakeoffNotification\x12\r\n\x05msgId\x18\x01 \x01(\r\x12\x12\n\nisTakenOff\x18\x02 \x01(\x08\x12\x0c\n\x04time\x18\x03 \x01(\x04\"\x17\n\x06ReqAck\x12\r\n\x05msgId\x18\x01 \x01(\x04\x32\xa3\x01\n\rMomentum22Viz\x12\x33\n\x10SetLandingStatus\x12\x14.LandingNotification\x1a\x07.ReqAck\"\x00\x12\x33\n\x10SetTakeoffStatus\x12\x14.TakeoffNotification\x1a\x07.ReqAck\"\x00\x12(\n\x10SetDroneLocation\x12\t.Location\x1a\x07.ReqAck\"\x00\x62\x06proto3'
 )
 
 
@@ -55,7 +55,7 @@ _LOCATION = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='px4Time', full_name='Location.px4Time', index=3,
+      name='time', full_name='Location.time', index=3,
       number=4, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -74,7 +74,7 @@ _LOCATION = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=13,
-  serialized_end=92,
+  serialized_end=89,
 )
 
 
@@ -101,7 +101,7 @@ _LANDINGNOTIFICATION = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='px4Time', full_name='LandingNotification.px4Time', index=2,
+      name='time', full_name='LandingNotification.time', index=2,
       number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -119,8 +119,8 @@ _LANDINGNOTIFICATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=94,
-  serialized_end=165,
+  serialized_start=91,
+  serialized_end=159,
 )
 
 
@@ -147,7 +147,7 @@ _TAKEOFFNOTIFICATION = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='px4Time', full_name='TakeoffNotification.px4Time', index=2,
+      name='time', full_name='TakeoffNotification.time', index=2,
       number=3, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -165,8 +165,8 @@ _TAKEOFFNOTIFICATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=167,
-  serialized_end=240,
+  serialized_start=161,
+  serialized_end=231,
 )
 
 
@@ -197,8 +197,8 @@ _REQACK = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=242,
-  serialized_end=265,
+  serialized_start=233,
+  serialized_end=256,
 )
 
 DESCRIPTOR.message_types_by_name['Location'] = _LOCATION
@@ -244,8 +244,8 @@ _MOMENTUM22VIZ = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=268,
-  serialized_end=431,
+  serialized_start=259,
+  serialized_end=422,
   methods=[
   _descriptor.MethodDescriptor(
     name='SetLandingStatus',
