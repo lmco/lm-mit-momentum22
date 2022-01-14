@@ -60,7 +60,7 @@ class my_flight_controller(student_base):
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
-		tol = 0.0001 # Approximately 50 feet tolerance
+		tol = 0.0003 # Approximately 150 feet tolerance
 		last_survivor_count = telemetry['survivors_found']
 		print('Aircraft is enroute to first survivor')
 		while err > tol:
@@ -76,8 +76,8 @@ class my_flight_controller(student_base):
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
-		tol = 0.0001 # Approximately 50 feet tolerance
-		print('Aircraft is enroute to first survivor')
+		tol = 0.0003 # Approximately 150 feet tolerance
+		print('Aircraft is enroute to second survivor')
 		while err > tol:
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 			if (last_survivor_count < telemetry['survivors_found']):
