@@ -74,38 +74,43 @@ class VizDataTable(VisualizationSharedDataStore):
                                                TableColumn(field='maxx', title='maxx'),
                                                TableColumn(field='maxy', title='maxy')],
                                       editable=self.Viz.mode == Mode.MAP_MAKER,
-                                      sizing_mode="stretch_both")
+                                      sizing_mode="stretch_both",
+                                      autosize_mode="fit_viewport")
         self.survivors_table = DataTable(source=self.Viz.data.survivors_table_source,
                                          columns=self.columns_snr,
                                          editable=self.Viz.mode == Mode.MAP_MAKER,
                                          sizing_mode="stretch_both",
+                                         autosize_mode="fit_viewport",
                                          height_policy="fit",
                                          min_height=200)
         self.fires_table = DataTable(source=self.Viz.data.fires_table_source,
                                      columns=self.columns_fs,
                                      editable=self.Viz.mode == Mode.MAP_MAKER,
                                      sizing_mode="stretch_both",
+                                     autosize_mode="fit_viewport",
                                      height_policy="fit",
                                      min_height=200)
         self.wind_table = DataTable(source=self.Viz.data.wind_table_source,
                                     columns=[TableColumn(field="spd_kts", title="Speed (kts)"),
                                              TableColumn(field="dir_deg", title="Direction (deg)")],
                                     editable=False,
-                                    sizing_mode="stretch_both")
+                                    sizing_mode="stretch_both",
+                                    autosize_mode="fit_viewport")
         self.stats_table = DataTable(source=self.Viz.data.stats_table_source,
-                                     columns=[TableColumn(field="elapsed_dur", title="Elapsed Mission Duration (sec)"),
-                                              TableColumn(field="remaining_dur", title="Remaining Mission Duration (sec)"),
+                                     columns=[TableColumn(field="elapsed_dur", title="Elapsed Time (sec)"),
+                                              TableColumn(field="remaining_dur", title="Remaining Time (sec)"),
                                               TableColumn(field="mission_stat", title="% Survivors Found" 
                                                           if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE 
-                                                          else "Drone Water Quantity"),
-                                              TableColumn(field="lon", title="Drone Lon"),
-                                              TableColumn(field="lat", title="Drone Lat"),
-                                              TableColumn(field="status", title="Drone Status"),
-                                              TableColumn(field="score", title="Number of Survivors Found" 
+                                                          else "Water Qt (sec)"),
+                                              TableColumn(field="lon", title="Lon"),
+                                              TableColumn(field="lat", title="Lat"),
+                                              TableColumn(field="status", title="Status"),
+                                              TableColumn(field="score", title="Num Survivors Found" 
                                                           if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE 
                                                           else "% Fires extinguished")],
                                      editable=False,
-                                     sizing_mode="stretch_both")
+                                     sizing_mode="stretch_both",
+                                     autosize_mode="fit_viewport")
 
         # Table descriptions
         self.survivors_table_description = Div(text="""Entered Survivors<br>
