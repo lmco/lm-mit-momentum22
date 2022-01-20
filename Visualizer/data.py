@@ -31,7 +31,6 @@ import pickle as binlib
 from pathlib import Path
 from datetime import datetime
 import json
-import pickle
 import traceback
 from os.path import exists
 
@@ -447,8 +446,8 @@ class Data(VisualizationSharedDataStore):
             self.disable_save = False
             with open("maps/" + map_name + ".json") as f:
                 map_data = json.load(f)
-                if(exists('Visualizer/.' + map_name + '.snr.bin')):
-                    map_data['data_snr'] = pickle.load(open('Visualizer/.' + map_name + '.snr.bin', 'rb'))
+                if(exists('Visualizer/static/.' + map_name + '.snr.bin')):
+                    map_data['data_snr'] = binlib.load(open('Visualizer/static/.' + map_name + '.snr.bin', 'rb'))
                 return map_data
         elif(exists("maps/" + map_name + ".bin")):
             self.disable_save = True
