@@ -100,7 +100,7 @@ class VizButton(VisualizationSharedDataStore):
                                    button_type="success",
                                    width_policy="min",
                                    min_width=500,
-                                   disabled=self.Viz.mode == Mode.MAP_MAKER or self.Viz.data.map_data_dict['map_type'] == MapType.FIRE_SUPPRESSION)
+                                   disabled=self.Viz.mode == Mode.MAP_MAKER or self.Viz.data.map_data_dict['map_type'] == MapType.FIRE_SUPPRESSION or self.Viz.data.disable_save)
         self.cheat_button.on_click(self.toggle_items_of_interest)
 
         # Keep track of the visibility

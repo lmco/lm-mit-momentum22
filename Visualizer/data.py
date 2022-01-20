@@ -448,6 +448,7 @@ class Data(VisualizationSharedDataStore):
                 map_data = json.load(f)
                 if(exists('Visualizer/static/.' + map_name + '.snr.bin')):
                     map_data['data_snr'] = binlib.load(open('Visualizer/static/.' + map_name + '.snr.bin', 'rb'))
+                    self.disable_save = True
                 return map_data
         elif(exists("maps/" + map_name + ".bin")):
             self.disable_save = True
