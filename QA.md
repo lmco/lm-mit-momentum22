@@ -12,7 +12,9 @@
   - [Fire Suppression (same for practice and competition)](#fire-suppression-same-for-practice-and-competition)
   - [Search and Rescue](#search-and-rescue-1)
 - [Where will the drone start the mission?](#where-will-the-drone-start-the-mission)
+- [I am launching a map, but the drone gets initialized somewhere else (e.g. map is in Nantucket, but the drone is in Boston). Is this a bug?](#i-am-launching-a-map-but-the-drone-gets-initialized-somewhere-else-eg-map-is-in-nantucket-but-the-drone-is-in-boston-is-this-a-bug)
 - [How quickly does the drone climb/descend/move laterally?](#how-quickly-does-the-drone-climbdescendmove-laterally)
+- [Can I increase the simulation rate?](#can-i-increase-the-simulation-rate)
 - [How big are the maps?](#how-big-are-the-maps)
 - [How will the competition maps be provided?](#how-will-the-competition-maps-be-provided)
 - [Can I use an outside library to accomplish the mission?](#can-i-use-an-outside-library-to-accomplish-the-mission)
@@ -79,24 +81,35 @@ The water will deposit so long as the drone is at least within a 5 meter radius 
 
 ### Fire Suppression (same for practice and competition)
 
-- Fire statuses: Not programmatically, but these metrics are available via the Visualizer tables.
-- Fire locations: Map records contain fire locations in the `data_fs` field (see [maps/boston_fire.json](https://github.com/lmco/lm-mit-momentum22/blob/main/maps/boston_fire.json#L16) for example). These locations are also viewable via the Visualizer tables. Upcoming: near real-time locations will be available programmatically via a connection to the visualizer.
-- Water status: same as fire statuses.
-- Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries.
+- Fire statuses: Fire area extenguished in percent is available via the visualizer and in real-time via a connection to the visualizer (see how to access programmatically in example student code)
+- Fire locations:
+  - Map records contain initial fire vertex locations in the `data_fs` field (see [maps/boston_fire.json](https://github.com/lmco/lm-mit-momentum22/blob/main/maps/boston_fire.json#L16) for example)
+  - Fire vertex locations are viewable in real-time via the Visualizer tables
+  - Fire vertex locations are available in real-time programmatically via a connection to the visualizer (see how to access programmatically in example student code)
+- Water status: same as fire statuses
+- Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries. See [data_maker.py](https://github.com/lmco/lm-mit-momentum22/blob/main/utils/data_maker.py) for ideas on how to start working with this file.
 
 ### Search and Rescue
 
-- Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries.
+- Water locations: [waterbodies.geojson](https://github.com/lmco/lm-mit-momentum22/blob/main/data/waterbodies.geojson) specifies water and land geometries. See [data_maker.py](https://github.com/lmco/lm-mit-momentum22/blob/main/utils/data_maker.py) for ideas on how to start working with this file.
 - Practice maps
-  - Survivor statuses: Not programmatically, but these metrics are available via the Visualizer tables. Upcoming: a near real-time count of found survivors will be available programmatically via a connection to the visualizer.
+  - Survivor statuses:
+    - Real-time count of found survivors is available via the Visualizer tables
+    - Real-time count of found survivors is available programmatically via a connection to the visualizer (see how to access programmatically in example student code)
   - Survivor locations: Map records contain survivor locations in the `data_snr` field (see [maps/boston_sar.json](https://github.com/lmco/lm-mit-momentum22/blob/main/maps/boston_sar.json#L20) for example). These locations are also viewable via the Visualizer tables.
 - Competition map
-  - Survivor statuses: The total number of survivors and how many have been discovered is viewable via the Visualizer tables only. Upcoming: a near real-time count of found survivors will be available programmatically via a connection to the visualizer.
+  - Survivor statuses: 
+    - Real-time count of found survivors is available via the Visualizer tables
+    - Real-time count of found survivors is available programmatically via a connection to the visualizer (see how to access programmatically in example student code)
   - Survivor locations: No access to any locations for competition maps (neither programmatically nor via Visualizer tables).
 
 ## Where will the drone start the mission?
 
 The drone's initial position is determined by the `.bash` script we have provided you at the root of this repository. The competition drone will start on the coastline, in the vicinity of water for both mission types.
+
+## I am launching a map, but the drone gets initialized somewhere else (e.g. map is in Nantucket, but the drone is in Boston). Is this a bug?
+
+No, this is not a bug. You likely forgot to use the correct `.bash` launcher script. Make sure that the launcher script you're using corresponds to your map. For example, when launching the Nantucket map, you have to use the `launch_px4_nantucket.bash` launcher script.
 
 ## How quickly does the drone climb/descend/move laterally?
 
@@ -111,13 +124,28 @@ The drone's initial position is determined by the `.bash` script we have provide
 | Z up max acceleration     | 5.0               | m/s/s             | MPC_ACC_UP_MAX            |
 | Z down max acceleration   | 3.0               | m/s/s             | MPC_ACC_DOWN_MAX          |
 
+## Can I increase the simulation rate?
+
+Yes, you have to set the `PX4_SIM_SPEED_FACTOR` global variable to a factor greater than 1. To do this, export the variable in the same terminal window where you will launch PX4 (either manually or using one of the launcher scripts) using
+
+``` sh
+# PX4_SIM_SPEED_FACTOR < 1 is slower than real-time
+# PX4_SIM_SPEED_FACTOR = 1 is real-time
+# PX4_SIM_SPEED_FACTOR > 1 is faster than real-time
+export PX4_SIM_SPEED_FACTOR=2
+```
+
+The exported value will be persistent so long as that particular terminal window is open. If you open a new terminal window or restart your computer/VM, you will have to export the variable value again.
+
+>Setting this **only affects the PX4 simulation rate and does not impact the visualizer**. The rates for fire extinguishing and water uptake/deposit will remain the same, and the scoring mechanism will continue at the same rate. As such, we do not recommend going above a 5x simulation speed.
+
 ## How big are the maps?
 
 Maps are 16:9 aspect ratio with latitudinal dimension of 0.003 degrees. You may check the exact dimensions and location of geographical bounds of a map by inspecting the `bounds` field of your map's `.json` record. You will find these map records in the [/maps directory](https://github.com/lmco/lm-mit-momentum22/tree/main/maps).
 
 ## How will the competition maps be provided?
 
-The competition maps will be pushed to this GitHub repository a few days before the due date (actual date TBD). The competition map will be in binary format for the Search and Rescue mission and JSON for the Fire Suppression mission.
+The competition maps will be pushed to this GitHub repository a few days before the due date (late afternoon, Jan 20th). The competition map will be in a combination binary and `.json` format for the Search and Rescue mission and `.json` for the Fire Suppression mission.
 
 ## Can I use an outside library to accomplish the mission?
 

@@ -42,8 +42,8 @@ class Plot(VisualizationSharedDataStore):
 
         # Create figure object.
         self.figure = figure(title='MIT Momentum Map Maker',
-                             plot_height=1080,
-                             plot_width=1920,
+                             plot_height=1152,
+                             plot_width=2048,
                              x_range=(self.Viz.data.bbox[0], 
                                       self.Viz.data.bbox[2]),
                              y_range=(self.Viz.data.bbox[1], 

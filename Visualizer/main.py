@@ -153,7 +153,7 @@ class Visualizer(VisualizationSharedDataStore):
                                                                self.Viz.text.map_name_text_box,
                                                                self.Viz.button.save_as_button,
                                                                self.Viz.button.bind_map_button,
-                                                               sizing_mode="stretch_both"), sizing_mode="stretch_both"))
+                                                               width_policy="min", min_width=500), width_policy="max", width=2048))
             curdoc().title = "Momentum 22 MapMaker"
         elif self.Viz.mode == Mode.VISUALIZATION and self.Viz.data.map_data_dict["map_type"] == MapType.FIRE_SUPPRESSION:
             curdoc().add_root(Row(self.Viz.plot.figure, Column(self.Viz.button.radio_button_description,
@@ -168,7 +168,7 @@ class Visualizer(VisualizationSharedDataStore):
                                                                self.Viz.text.map_name_text_box,
                                                                self.Viz.button.save_as_button,
                                                                self.Viz.button.cheat_button,
-                                                               sizing_mode="stretch_both"), sizing_mode="stretch_both"))
+                                                               width_policy="min", min_width=500), width_policy="max", width=2048))
         elif self.Viz.mode == Mode.VISUALIZATION and self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE and not self.Viz.data.disable_save:
             curdoc().add_root(Row(self.Viz.plot.figure, Column(self.Viz.button.radio_button_description,
                                                                self.Viz.data_table.stats_table_description,
@@ -182,7 +182,7 @@ class Visualizer(VisualizationSharedDataStore):
                                                                self.Viz.text.map_name_text_box,
                                                                self.Viz.button.save_as_button,
                                                                self.Viz.button.cheat_button,
-                                                               sizing_mode="stretch_both"), sizing_mode="stretch_both"))
+                                                               width_policy="min", min_width=500), width_policy="max", width=2048))
         elif self.Viz.mode == Mode.VISUALIZATION and self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE and self.Viz.data.disable_save:
             curdoc().add_root(Row(self.Viz.plot.figure, Column(self.Viz.button.radio_button_description,
                                                                self.Viz.data_table.stats_table_description,
@@ -194,7 +194,7 @@ class Visualizer(VisualizationSharedDataStore):
                                                                self.Viz.text.map_name_text_box,
                                                                self.Viz.button.save_as_button,
                                                                self.Viz.button.cheat_button,
-                                                               sizing_mode="stretch_both"), sizing_mode="stretch_both"))
+                                                               width_policy="min", min_width=500), width_policy="max", width=2048))
 
         if self.Viz.mode == Mode.VISUALIZATION:
             # Start the grpc server (internally operates in another process)
@@ -205,8 +205,8 @@ class Visualizer(VisualizationSharedDataStore):
             
             # Check in on grpc data every 10 ms
             curdoc().add_periodic_callback(self.update, 10)  # period in ms            
-            # Check in on grpc data every 100 ms
-            curdoc().add_periodic_callback(self.file_io_update, 100)  # period in ms       
+            # Check in on grpc data every 500 ms - rarer to make sure that we don't make everything sluggish for this
+            curdoc().add_periodic_callback(self.file_io_update, 500)  # period in ms       
 
 # Create the visualizer
 visualizer = Visualizer()

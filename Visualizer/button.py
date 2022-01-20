@@ -66,8 +66,9 @@ class VizButton(VisualizationSharedDataStore):
         # Make a binary selection for the track this map is for
         self.radio_button_group = RadioButtonGroup(labels=self.LABELS, 
                                                    active=int(
-                                                       self.Viz.data.map_data_dict['map_type']), 
-                                                   sizing_mode="stretch_width", 
+                                                   self.Viz.data.map_data_dict['map_type']), 
+                                                   width_policy="min",
+                                                   min_width=500,
                                                    disabled=self.Viz.mode == Mode.VISUALIZATION)
         self.radio_button_group.on_click(self.set_map_type)
         
@@ -81,22 +82,25 @@ class VizButton(VisualizationSharedDataStore):
         # Make a save button for the map and make it call the save map method on click
         self.save_as_button = Button(label="SAVE MAP AS", 
                                      button_type="success",
-                                     sizing_mode="stretch_width", 
+                                     width_policy="min",
+                                     min_width=500,
                                      disabled=self.Viz.mode == Mode.VISUALIZATION or self.Viz.data.disable_save)
         self.save_as_button.on_click(self.Viz.data.save_map_record_as)
         
         # Make a bind button for the map and make it call the bind map method on click
         self.bind_map_button = Button(label="BIND WINDOW TO STANDARD DIMS", 
                                       button_type="success",
-                                      sizing_mode="stretch_width", 
+                                      width_policy="min",
+                                      min_width=500,
                                       disabled=self.Viz.mode == Mode.VISUALIZATION)
         self.bind_map_button.on_click(self.Viz.data.bind_bbox)
 
         # Make a cheat button for the map and make it call the method that changes the visibilities on objects of interest on click
         self.cheat_button = Button(label="CHEAT (TOGGLE VISIBILITY ON THE ITEMS OF INTEREST)", 
                                    button_type="success",
-                                   sizing_mode="stretch_width", 
-                                   disabled=self.Viz.mode == Mode.MAP_MAKER or self.Viz.data.map_data_dict['map_type'] == MapType.FIRE_SUPPRESSION)
+                                   width_policy="min",
+                                   min_width=500,
+                                   disabled=self.Viz.mode == Mode.MAP_MAKER or self.Viz.data.map_data_dict['map_type'] == MapType.FIRE_SUPPRESSION or self.Viz.data.disable_save)
         self.cheat_button.on_click(self.toggle_items_of_interest)
 
         # Keep track of the visibility
