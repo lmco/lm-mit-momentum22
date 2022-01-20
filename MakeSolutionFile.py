@@ -51,5 +51,5 @@ data_snr_read = pickle.load(open(binfile, "rb"))
 
 print(data_snr_read)
 
-print("\nThis file should be moved to the Visualizer directory and renamed to a hidden file ('." + binfile + "')\n")
+print("\nThis file should be moved to the Visualizer/static directory and renamed to a hidden file ('." + binfile + "')\n")
 print("Remember to remove the contents of data_snr from the JSON file that is being distributed to students.\n")
