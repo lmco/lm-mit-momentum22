@@ -205,8 +205,8 @@ class Visualizer(VisualizationSharedDataStore):
             
             # Check in on grpc data every 10 ms
             curdoc().add_periodic_callback(self.update, 10)  # period in ms            
-            # Check in on grpc data every 100 ms
-            curdoc().add_periodic_callback(self.file_io_update, 100)  # period in ms       
+            # Check in on grpc data every 500 ms - rarer to make sure that we don't make everything sluggish for this
+            curdoc().add_periodic_callback(self.file_io_update, 500)  # period in ms       
 
 # Create the visualizer
 visualizer = Visualizer()

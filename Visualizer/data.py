@@ -723,10 +723,15 @@ class Data(VisualizationSharedDataStore):
                                                                                  factor)
                     self.water_quantity = 0
                     
-                if(self.polygons_of_interest[idx].is_empty):
-                    # If a fire has been fully extinguished, make sure to patch that into the data table.
-                    self.fires_table_source.patch({ 'xs': [(idx, [0])],
-                                                    'ys': [(idx, [0])]})
+                if(self.polygons_of_interest[idx].is_empty or self.polygons_of_interest[idx].area*6370**2 < 0.01):
+                    # If a fire has been fully extinguished, make sure to patch it out of the data table
+                    [x for i, x in enumerate(self.fires_table_source.data) if i != idx]
+                    self.fires_table_source.data = {'xs': [x for i, x in enumerate(self.fires_table_source.data['xs']) if i != idx],
+                                                    'ys': [x for i, x in enumerate(self.fires_table_source.data['ys']) if i != idx],
+                                                    'fill_color': [x for i, x in enumerate(self.fires_table_source.data['fill_color']) if i != idx],
+                                                    'alpha': [x for i, x in enumerate(self.fires_table_source.data['alpha']) if i != idx]}
+                    # And remove it from the list of objects we check intersections against
+                    self.polygons_of_interest.pop(idx)
                 else:
                     # If a fire is still around after this, update the perimeter points
                     self.fires_table_source.patch({ 'xs': [(idx, list(self.polygons_of_interest[idx].exterior.coords.xy[0]))],
