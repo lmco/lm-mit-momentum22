@@ -63,7 +63,7 @@ class my_flight_controller(student_base):
 		tol = 0.0001 # Approximately 50 feet tolerance
 		while err > tol:
 			print('Aircraft is enroute to water')
-			time.sleep(10)
+			time.sleep(2) # Need a sleep to specify the rate of this loop to prevent saturation of messages to the Visualizer
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
 
 
@@ -71,7 +71,7 @@ class my_flight_controller(student_base):
 		water_start_time = time.time()
 		while(time.time() - water_start_time < 10.0):
 			print("Water level: " + str(round(telemetry['water_pct_remaining'], 2)) + '%')
-			time.sleep(5)
+			time.sleep(2) # Need a sleep to specify the rate of this loop to prevent saturation of messages to the Visualizer
 		print("Water level: " + str(round(telemetry['water_pct_remaining'], 2)) + '%')
 
 		# fire

@@ -55,31 +55,34 @@ class my_flight_controller(student_base):
 		
 		# First Survivor
 		print("Goto first survivor")
-		goalLat = 42.358283498732334 # first survivor
-		goalLon = -70.98547492971431
+		goalLat = 42.3583# first survivor
+		goalLon = -70.9855
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
-		tol = 0.0003 # Approximately 150 feet tolerance
+		tol = 0.0001 # Approximately 50 feet tolerance
 		last_survivor_count = telemetry['survivors_found']
 		print('Aircraft is enroute to first survivor')
+		count = 0
 		while err > tol:
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
+			time.sleep(.005)
 			if (last_survivor_count < telemetry['survivors_found']):
 				print("Found a survivor!")
 				last_survivor_count = telemetry['survivors_found']
 
 		# Second survivor
 		print("Goto second survivor")
-		goalLat = 42.358373199729016 # second survivor
-		goalLon = -70.99167913333119
+		goalLat = 42.3584 # second survivor
+		goalLon = -70.9917
 		goalAlt = 100 
 		self.goto(goalLat, goalLon, goalAlt)
 		err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
-		tol = 0.0003 # Approximately 150 feet tolerance
+		tol = 0.0001 # Approximately 50 feet tolerance
 		print('Aircraft is enroute to second survivor')
 		while err > tol:
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
+			time.sleep(.005) # Need a sleep here to prevent saturation of messages to the visualizer!!! This loop runs at 200 Hz
 			if (last_survivor_count < telemetry['survivors_found']):
 				print("Found a survivor!")
 				last_survivor_count = telemetry['survivors_found']
@@ -95,6 +98,7 @@ class my_flight_controller(student_base):
 		print('Aircraft is enroute; returning to base')
 		while err > tol:
 			err = numpy.linalg.norm([goalLat - telemetry['latitude'], goalLon - telemetry['longitude']])
+			time.sleep(.005) # Need a sleep here to prevent saturation of messages to the visualizer!!! This loop runs at 200Hz
 			if (last_survivor_count < telemetry['survivors_found']):
 				print("Found a survivor!")
 				last_survivor_count = telemetry['survivors_found']
