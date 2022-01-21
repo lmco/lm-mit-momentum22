@@ -27,6 +27,7 @@ import navpy
 from shapely.geometry import shape
 import os
 import json
+import math
 
 class student_base:
 
@@ -47,6 +48,7 @@ class student_base:
 		self.telemetry['fires_pct_remaining'] = 100
 		self.telemetry['fire_polygons'] = []
 		self.telemetry['survivors_found'] = 0
+		self.telemetry['velocity'] = 0
 
 		self.commands = {}
 		self.commands['arm'] = False
@@ -129,6 +131,7 @@ class student_base:
 		await self.drone.connect()
 		asyncio.ensure_future(self.mav_in_air(self.drone))
 		asyncio.ensure_future(self.mav_position(self.drone))
+		asyncio.ensure_future(self.mav_velocity(self.drone))
 		asyncio.ensure_future(self.mav_shutdown_watcher())
 		asyncio.ensure_future(self.mav_command_watcher(self.drone))
 		
@@ -150,6 +153,10 @@ class student_base:
 			self.telemetry['longitude'] = position.longitude_deg
 			self.telemetry['altitude'] = position.relative_altitude_m
 			self.home_alt = position.absolute_altitude_m - position.relative_altitude_m
+   
+	async def mav_velocity(self, drone):
+		async for pv in drone.telemetry.position_velocity_ned():
+			self.telemetry['velocity'] = math.sqrt(pv.velocity.north_m_s**2 + pv.velocity.east_m_s**2)
 	
 	async def mav_command_watcher(self, drone):
 		while not self.mav_shutdown:
