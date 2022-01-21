@@ -1,5 +1,7 @@
 # Frequent Questions & Answers<!-- omit in toc -->
 
+- [How do I get started with the competition files?](#how-do-i-get-started-with-the-competition-files)
+- [How do I record my screen in Ubuntu?](#how-do-i-record-my-screen-in-ubuntu)
 - [What are the missions?](#what-are-the-missions)
   - [Fire Suppression](#fire-suppression)
   - [Search and Rescue](#search-and-rescue)
@@ -22,6 +24,109 @@
 - [I borrowed a laptop and my project folder is out of date. How do I update it?](#i-borrowed-a-laptop-and-my-project-folder-is-out-of-date-how-do-i-update-it)
 - [How can I make a suggestion for design or functionality improvements?](#how-can-i-make-a-suggestion-for-design-or-functionality-improvements)
 - [Who are the Lockheed Martin points of contact and how can I get in touch with them?](#who-are-the-lockheed-martin-points-of-contact-and-how-can-i-get-in-touch-with-them)
+
+## How do I get started with the competition files?
+
+1. Update your local version of the repository by pulling in updates.
+
+   ``` sh
+   # Change directory to the the local copy of the repository
+   cd ~/Momentum/lm-mit-momentum22/
+   # Pull latest changes from the remote repository
+   git pull
+   ```
+
+2. Ensure that the following commands succeed.
+
+   ``` sh
+   # Call the command to print the contents of a file, 
+   # but redirect the output to a null device to keep our terminal clutter-free.
+   # If the command fails, it will print out the error to the console. 
+   # If it succeeds, it will simply return without any output.
+   cat ~/Momentum/lm-mit-momentum22/launch_px4_Fire_Competition.bash > /dev/null
+   cat ~/Momentum/lm-mit-momentum22/launch_px4_SAR_Competition.bash > /dev/null
+   cat ~/Momentum/lm-mit-momentum22/maps/Fire_Competition.json > /dev/null
+   cat ~/Momentum/lm-mit-momentum22/maps/SAR_Competition.json > /dev/null
+   ```
+
+   > If you get `cat: /home/<username>/Momentum/lm-mit-momentum22/<file>: No such file or directory`, you need to return to step 1. If it still doesn't work, you need to back up your changes, delete the local repository directory, reclone the repository from the remote, and apply your changes from backup.
+
+3. Launch the simulation using the correct map and bash script (each code block goes into a new terminal window)
+
+   a. Fire Suppression
+
+      ``` sh
+      # Get into the Momentum22 project folder
+      cd ~/Momentum/lm-mit-momentum22
+
+      # Launch PX4 with the jMavSim simulation target and set the starting location to Fire Competition
+      bash launch_px4_Fire_Competition.bash
+      ```
+
+      ``` sh
+      # Get into the Momentum22 project folder
+      cd ~/Momentum/lm-mit-momentum22
+
+      # Launch Visualizer with the Fire Competition map
+      bokeh serve Visualizer --show --args -v Fire_Competition
+      ```
+
+      ``` sh
+      # Get into the Momentum22 project folder
+      cd ~/Momentum/lm-mit-momentum22
+
+      # Launch Student code (replace <name of your script> with the name of the file where you have your solution)
+      python3 student/<name of your script>.py 
+      ```
+
+   b. Search and Rescue
+
+      ``` sh
+      # Get into the Momentum22 project folder
+      cd ~/Momentum/lm-mit-momentum22
+
+      # Launch PX4 with the jMavSim simulation target and set the starting location to SAR Competition
+      bash launch_px4_SAR_Competition.bash
+      ```
+
+      ``` sh
+      # Get into the Momentum22 project folder
+      cd ~/Momentum/lm-mit-momentum22
+
+      # Launch Visualizer with the SAR Competition map
+      bokeh serve Visualizer --show --args -v SAR_Competition
+      ```
+
+      ``` sh
+      # Get into the Momentum22 project folder
+      cd ~/Momentum/lm-mit-momentum22
+
+      # Launch Student code (replace <name of your script> with the name of the file where you have your solution)
+      python3 student/<name of your script>.py 
+      ```
+  
+4. After dry-running your solution against the competition map and when you feel comfortable with your solution, please [record your screen](#how-do-i-record-my-screen-in-ubuntu) with a live run of your solution. When recording, ensure to
+   - Run your simulation at 1x speed
+   - Capture the takeoff and the end of the mission - your video should be at least 10 mins long
+
+    >You may tweak your solution and try as many times before recording as you feel necessary, you only need to submit your best run to us.
+
+5. Upload your recording to YouTube and include a link to the video with your submission.
+6. Assemble your submission email. It shall include:
+   - Your Python code
+   - A list of all of your dependencies and their version numbers
+   - A link to the YouTube video you uploaded in step 5
+7. Send your submission email to stephen.t.kubik@lmco.com.
+
+## How do I record my screen in Ubuntu?
+
+Before your first recording, increase the screen record time from default my executing the following command in a terminal: `gsettings set org.gnome.settings-daemon.plugins.media-keys max-screencast-length 1800`. This is a one-time action and you only need to do it once.
+
+To start a recording, press `Ctrl+Shift+Alt+R`. You should see a small red circle appear in the upper right of your screen next to the volume and power controls.
+
+To stop a recording, press the same key command (`Ctrl+Shift+Alt+R`). Depending on the length of your video, it may take a few minutes to finish encoding, but once the video is ready, it will be available in the `~/Videos` directory as `Screencast from <date> <time>.webm`.
+
+>Ensure to capture the takeoff and the end of the mission - your video should be at least 10 mins long.
 
 ## What are the missions?
 
@@ -137,7 +242,7 @@ export PX4_SIM_SPEED_FACTOR=2
 
 The exported value will be persistent so long as that particular terminal window is open. If you open a new terminal window or restart your computer/VM, you will have to export the variable value again.
 
->Setting this **only affects the PX4 simulation rate and does not impact the visualizer**. The rates for fire extinguishing and water uptake/deposit will remain the same, and the scoring mechanism will continue at the same rate. As such, we do not recommend going above a 5x simulation speed.
+>Setting this **only affects the PX4 simulation rate and does not impact the visualizer**. The rates for fire extinguishing and water uptake/deposit will remain the same, and the scoring mechanism will continue at the same rate. As such, we do not recommend going above a 5x simulation speed and **this is not a valid configuration for final submission**.
 
 ## How big are the maps?
 
@@ -145,7 +250,7 @@ Maps are 16:9 aspect ratio with latitudinal dimension of 0.003 degrees. You may 
 
 ## How will the competition maps be provided?
 
-The competition maps will be pushed to this GitHub repository a few days before the due date (late afternoon, Jan 20th). The competition map will be in a combination binary and `.json` format for the Search and Rescue mission and `.json` for the Fire Suppression mission.
+The competition maps will be pushed to this GitHub repository a few days before the due date (21 JAN 2022, 9AM EST). The competition map will be in a combination binary and `.json` format for the Search and Rescue mission and `.json` for the Fire Suppression mission.
 
 ## Can I use an outside library to accomplish the mission?
 
