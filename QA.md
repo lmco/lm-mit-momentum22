@@ -113,7 +113,7 @@
 
 5. Upload your recording to YouTube and include a link to the video with your submission.
 6. Assemble your submission email. It shall include:
-   - Your Python code
+   - Your Python code in a zip folder
    - A list of all of your dependencies and their version numbers
    - A link to the YouTube video you uploaded in step 5
 7. Send your submission email to stephen.t.kubik@lmco.com.
