@@ -20,31 +20,35 @@ bounding_polygon = Polygon([(bbox[0], bbox[1]),
 
 # Import geojson (sources from Natural Earth and US Census)
 # https://geopandas.org/docs/user_guide/projections.html
-rivers = gpd.read_file('../data/ne_10m_rivers_north_america.geojson', 
+
+# rivers = gpd.read_file('../data/ne_10m_rivers_north_america.geojson', 
+#                        bbox=bbox, 
+#                        crs="EPSG:4326")
+# lakes = gpd.read_file('../data/ne_10m_lakes.geojson', 
+#                       bbox=bbox, 
+#                       crs="EPSG:4326")
+# usa_states = gpd.read_file('../data/cb_2018_us_state_20m.zip', 
+#                            bbox=bbox, 
+#                            crs="EPSG:4326")
+# oceans = gpd.read_file('../data/ne_10m_ocean_scale_rank.geojson', 
+#                        bbox=bbox, 
+#                        crs="EPSG:4326")
+
+# # Clean up data
+# rivers = rivers[rivers.featurecla != 'Lake Centerline']
+# rivers = rivers[rivers.featurecla != 'Lake Centerline (Intermittent)']
+# oceans = gpd.clip(oceans, bounding_polygon).to_crs("EPSG:4326")
+
+# # Combine waterbody data
+# waterbodies = rivers.append(lakes)
+# waterbodies = waterbodies.append(oceans)
+
+# # Save the waterbodies to a file
+# waterbodies.to_file("../data/waterbodies.geojson", driver='GeoJSON')
+
+waterbodies = gpd.read_file('../data/waterbodies.geojson', 
                        bbox=bbox, 
                        crs="EPSG:4326")
-lakes = gpd.read_file('../data/ne_10m_lakes.geojson', 
-                      bbox=bbox, 
-                      crs="EPSG:4326")
-usa_states = gpd.read_file('../data/cb_2018_us_state_20m.zip', 
-                           bbox=bbox, 
-                           crs="EPSG:4326")
-oceans = gpd.read_file('../data/ne_10m_ocean_scale_rank.geojson', 
-                       bbox=bbox, 
-                       crs="EPSG:4326")
-
-# Clean up data
-rivers = rivers[rivers.featurecla != 'Lake Centerline']
-rivers = rivers[rivers.featurecla != 'Lake Centerline (Intermittent)']
-oceans = gpd.clip(oceans, bounding_polygon).to_crs("EPSG:4326")
-
-# Combine waterbody data
-waterbodies = rivers.append(lakes)
-waterbodies = waterbodies.append(oceans)
-
-# Save the waterbodies to a file
-waterbodies.to_file("../data/waterbodies.geojson", driver='GeoJSON')
-
 # Save the water as an svg because Bokeh doesn't process polylines correctly
 # https://tex.stackexchange.com/questions/100190/how-can-i-remove-margins-when-integrating-matplotlib-plots-with-pgfplots
 import matplotlib.pyplot as plt
