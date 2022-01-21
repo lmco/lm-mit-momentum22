@@ -99,7 +99,7 @@ class VizDataTable(VisualizationSharedDataStore):
         self.stats_table = DataTable(source=self.Viz.data.stats_table_source,
                                      columns=[TableColumn(field="elapsed_dur", title="Elapsed Time (sec)"),
                                               TableColumn(field="remaining_dur", title="Remaining Time (sec)"),
-                                              TableColumn(field="mission_stat", title="% Survivors Found" 
+                                              TableColumn(field="mission_stat", title="Num Survivors Found" 
                                                           if self.Viz.data.map_data_dict["map_type"] == MapType.SEARCH_AND_RESCUE 
                                                           else "Water Qt (sec)"),
                                               TableColumn(field="lon", title="Lon"),
