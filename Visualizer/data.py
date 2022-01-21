@@ -280,7 +280,7 @@ class Data(VisualizationSharedDataStore):
         # Where to find the waterbodies svg (can't use the self.waterbodies because Bokeh's incomplete
         # treatment of GeoJSON files)
         self.waterbodies_filepath = [os.path.join(os.path.basename(
-            os.path.dirname(inspect.getfile(lambda: None))), 'static', 'waterbodies_w_additions.svg')]
+            os.path.dirname(inspect.getfile(lambda: None))), 'static', 'waterbodies_editted.svg')]
         
         # Where to find the ownship icon
         self.ownship_filepath = [os.path.join(os.path.basename(

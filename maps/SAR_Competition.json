@@ -1,0 +1,32 @@
+{
+    "bounds": {
+        "maxx": [
+            -77.32081404345253
+        ],
+        "maxy": [
+            43.96334882478425
+        ],
+        "minx": [
+            -77.32880567942665
+        ],
+        "miny": [
+            43.96034882478425
+        ]
+    },
+    "data_fs": {
+        "xs": [],
+        "ys": []
+    },
+    "data_snr": {
+        "x": [],
+        "y": []
+    },
+    "generated_on": "20/01/2022_21:32:47",
+    "map_name": "SAR_Competition",
+    "map_type": 1,
+    "mission_duration_min": 10,
+    "wind": {
+        "dir_deg": 0,
+        "spd_kts": 0
+    }
+}
