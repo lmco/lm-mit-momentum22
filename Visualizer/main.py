@@ -138,7 +138,7 @@ class Visualizer(VisualizationSharedDataStore):
         Also sets up the callback to update data that depend on the grpc connection.
         """
         
-        if self.Viz.mode == Mode.MAP_MAKER:
+        if self.Viz.mode == Mode.MAP_MAKER and not self.Viz.data.disable_save:
             curdoc().add_root(Row(self.Viz.plot.figure, Column(self.Viz.button.radio_button_description,
                                                                self.Viz.button.radio_button_group,
                                                                self.Viz.data_table.survivors_table_description,
