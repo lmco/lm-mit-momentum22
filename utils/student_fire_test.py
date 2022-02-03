@@ -1,3 +1,7 @@
+##################################################################
+#   Copyright 2021 Lockheed Martin Corporation.                  #
+#   Use of this software is subject to the BSD 3-Clause License. #
+##################################################################
 from itertools import count
 from xmlrpc.client import MAXINT
 from student_base import student_base
